@@ -25,7 +25,7 @@ export class UsuarioService {
   logout(){
     localStorage.removeItem('userName');
     localStorage.removeItem('token_value');
-    // this.router.navigate(['/clientes']);
+    this.router.navigate(['/analisis']);    
     window.location.reload();
   }
 

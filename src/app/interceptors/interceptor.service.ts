@@ -12,7 +12,7 @@ export class InterceptorService implements HttpInterceptor{
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     
     // const auth_token = 'YztU+CP3sOMH3pC9wy4rigECl7BVMvqXHsY8a2wORVFfUGI1Q8Nm2M7e6borqJjL';
-    const auth_token = localStorage.getItem('token_value');;
+    const auth_token = localStorage.getItem('token_value');
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + auth_token

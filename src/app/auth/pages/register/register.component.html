@@ -1,1 +1,46 @@
-<p>register works!</p>
+<div class="container-fluid h-100">
+    <div class="row h-100 align-items-center" style="background-color: #141218;">
+      <div class="col-md-4" >
+        <!-- Contenedor de imagen -->
+        <div class="d-flex justify-content-center h-100">
+          <img src="/assets/img/logo-login.png" alt="Imagen de inicio de sesión"  class="img-fluid h-auto">
+        </div>
+      </div>
+      <div class="col-md-8">
+        <!-- Contenedor del formulario -->
+        <div class="d-flex justify-content-center h-100">
+          <div class="form-container" style="width: 40%;">
+            <form [formGroup]='registerForm' (ngSubmit)="register()">
+              <!-- Título -->
+              <div class="form-group titulocolor" style="margin-bottom: 5em;">
+                <h1>Registro</h1>
+              </div>
+              <!-- Usuario -->
+              <div class="form-group mb-3 0">
+                <mat-form-field style="width: 100%;">
+                  <mat-label>Usuario:</mat-label>
+                  <input matInput type="text" name="userName" formControlName="userName">
+                </mat-form-field>
+              </div>
+              <!-- Contraseña -->
+              <div class="form-group mb-3">
+                <mat-form-field style="width: 100%;">
+                  <mat-label>Contraseña:</mat-label>
+                  <input matInput type="password" name="password" formControlName="password">
+                </mat-form-field>
+              </div>
+              <!-- Botón de registro -->
+              <div class="form-group mb-3">
+                <button mat-raised-button color="primary" type="submit" class="w-100" [disabled]="!registerForm.valid">Registrarse</button>
+              </div>
+              <!-- Texto de crear cuenta -->
+              <div class="form-group parrafocolor">
+                <p>¿Ya tienes una cuenta? <a routerLink="/auth/login">Inicia sesión</a>.</p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
