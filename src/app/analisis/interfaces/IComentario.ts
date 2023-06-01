@@ -5,4 +5,5 @@ export interface IComentario {
     fecha: string;
     productoId: number;
     clienteId: number;
+    userName: string;
   }

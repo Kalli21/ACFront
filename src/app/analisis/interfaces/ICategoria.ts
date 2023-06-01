@@ -4,5 +4,6 @@ export interface ICategoria {
   categoriaId: number;
   nombre: string;
   productos: IProducto[];
+  userName: string;
 }
 
