@@ -1,0 +1,49 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 280px;
+  transition: width 0.3s ease;
+}
+
+.mat-sidenav-content {
+  transition: margin-left 0.3s ease;
+}
+
+
+.mat-sidenav {
+  margin-top: 64px;
+  /* Ajusta el valor según la altura del mat-toolbar */
+}
+
+.fixed-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.toolbar-space {
+  height: 64px;
+  /* Ajusta el valor según la altura del mat-toolbar */
+}
+
+.content {
+  margin-top: 64px;
+}
+
+
+.center {
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+}
+
+
+/* +++++++ STYLES +++++++ */
+.wrapper {
+  height: calc(100vh);
+  background: black;
+}

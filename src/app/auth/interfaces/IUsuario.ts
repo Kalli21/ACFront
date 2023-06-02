@@ -1,7 +1,8 @@
 
-
 export interface IUsuario {
   userName: string;
+  nombres: string;
+  correo: string;
   password: string;
   token: string;
   activo: boolean;
@@ -9,19 +10,22 @@ export interface IUsuario {
 }
 
 interface Producto {
-  productoId: number;
+  id: number;
+  codProduct: string;
   nombre: string;
   descripcion: string;
   precio: number;
+  urlImg: string;
   usuarioId: number;
-  categoriID: number;
+  categoriaId: number;
   comentarios: Comentario[];
 }
 
 interface Comentario {
-  ComentarioId: number;
+  id: number;
   contenido: string;
   fecha: string;
   productoId: number;
   clienteId: number;
+  userName: string;
 }

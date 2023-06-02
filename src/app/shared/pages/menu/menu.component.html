@@ -1,0 +1,53 @@
+<ng-container *ngIf="!isLoading">
+  <mat-toolbar
+  color="primary"
+  *ngIf="shouldShowMenu()"
+  class="mat-elevation-z4 fixed-toolbar"
+>
+  <button mat-icon-button (click)="toggleMenu()">
+    <mat-icon> menu</mat-icon>
+  </button>
+  <span>App Title</span>
+</mat-toolbar>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #sidenav
+    class="sidenav"
+    [fixedInViewport]="true"
+    [mode]="isMenuFixed ? 'side' : 'over'"
+    [opened]="isMenuFixed"
+    [style.width.px]="isMenuFixed ? 280 : 0"
+  >
+    <!-- Contenido del menú -->
+    <mat-nav-list>
+      <mat-list-item>
+        <mat-icon matListIcon>inbox</mat-icon>
+        <span matLine>Inbox</span>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListIcon>star</mat-icon>
+        <span matLine>Starred</span>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListIcon>send</mat-icon>
+        <span matLine>Sent Mail</span>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListIcon>drafts</mat-icon>
+        <span matLine>Drafts</span>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content  [ngClass]="{'content': shouldShowMenu()}">
+    <div>
+      <router-outlet></router-outlet>
+      <!-- Contenido principal de la página -->
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+</ng-container>
+
+<div *ngIf="isLoading" class="wrapper center">
+  <mat-spinner class="menuSpinner"></mat-spinner>
+</div>
+

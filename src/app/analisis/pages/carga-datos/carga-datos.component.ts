@@ -1,9 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DataModalComponent } from '../data-modal/data-modal.component';
-import { IDataCSV } from '../../interfaces/IDataCSV';
-
-
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-carga-datos',
@@ -11,63 +10,35 @@ import { IDataCSV } from '../../interfaces/IDataCSV';
   styleUrls: ['./carga-datos.component.css']
 })
 export class CargaDatosComponent {
+  displayedColumns: string[] = []; // Aquí debes especificar las columnas de tu tabla
+  dataSource: MatTableDataSource<any> | null = null;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
+  pageSize = 5;
+  pageIndex = 0;
+  length = 0;
 
-  dataArchivo: any = [];
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  @ViewChild('fileInput') fileInput: any;
-
-  constructor(private dialog: MatDialog) { }
-
-  leerArchivo(event: any) {
-    const file: File = event.target.files[0];
-
-  
-    if (file) {
-      const reader: FileReader = new FileReader();
-
-      reader.readAsText(file);
-
-      reader.onload = (e: any) => {
-        const csvData: string = e.target.result;
-        this.procesarArchivo(csvData);
-        this.openCsvModal();
-
-      };
-    }
-
-  }
+  constructor(private dialog: MatDialog) {}
 
   openCsvModal(): void {
-    const dialogRef = this.dialog.open(DataModalComponent, {
-      // Aquí puedes enviar los datos del archivo CSV al modal si es necesario
-      data: this.dataArchivo.slice(0, 5),
-    });
+    const dialogRef = this.dialog.open(DataModalComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('El modal se cerró');
+      if (result) {
+        console.log('El modal se cerró');
+        console.log('Datos leídos:', result);
+        this.dataSource = new MatTableDataSource(result); // Asigna los datos al dataSource
+        this.displayedColumns = Object.keys(result[0]); // Asigna las columnas
+        this.length = result.length; // Actualiza la longitud total de los datos
+
+        this.dataSource.paginator = this.paginator; // Asigna el paginador al dataSource
+      }
     });
   }
 
-  private procesarArchivo(csvData: string) {
-
-    const list = csvData.split('\n');
-    const listKey = list[0].split(';');
-    list.forEach((e, index) => {
-      if (index === 0) {
-        return; // Omitir la primera iteración
-      }
-      const item = e.split(';')
-      const objeto: IDataCSV = {};
-
-      item.forEach((elemento, index) => {
-          objeto[listKey[index]] = elemento.trim();   
-      });
-      this.dataArchivo.push(objeto);
-
-    })
-
+  onPageChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
   }
-
-  
-
 }

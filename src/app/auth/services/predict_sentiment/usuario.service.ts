@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { IUsuario } from '../../interfaces/IUsuario';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,6 +26,7 @@ export class UsuarioService {
   logout(){
     localStorage.removeItem('userName');
     localStorage.removeItem('token_value');
+    localStorage.removeItem('userInfo');
     this.router.navigate(['/analisis']);    
     window.location.reload();
   }

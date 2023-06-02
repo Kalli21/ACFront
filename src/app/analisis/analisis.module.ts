@@ -4,7 +4,8 @@ import { CommonModule } from '@angular/common';
 import { AnalisisRoutingModule } from './analisis-routing.module';
 import { MatDialogModule } from '@angular/material/dialog'; 
 import { MatTableModule } from '@angular/material/table';
-import {MatButtonModule} from '@angular/material/button'; 
+import { MatButtonModule } from '@angular/material/button'; 
+import { MatPaginatorModule } from '@angular/material/paginator'; 
 
 import { CargaDatosComponent } from './pages/carga-datos/carga-datos.component';
 import { ProductoComponent } from './pages/producto/producto.component';
@@ -22,9 +23,10 @@ import { DataModalComponent } from './pages/data-modal/data-modal.component';
   imports: [
     CommonModule,
     AnalisisRoutingModule,
-    MatDialogModule,
+    MatDialogModule, 
     MatTableModule,
-    MatButtonModule
+    MatButtonModule,
+    MatPaginatorModule
   ],
 })
 export class AnalisisModule { }

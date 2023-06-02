@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UsuarioService } from '../../services/predict_sentiment/usuario.service';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +12,8 @@ export class LoginComponent{
   
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private service: UsuarioService,
+    private router: Router) {
     this.loginForm = this.fb.group({
         userName: ['', Validators.required],
         password: ['', Validators.required]
@@ -20,12 +23,15 @@ export class LoginComponent{
 
   login(): void {
     if (this.loginForm.valid) {
-      const userName = this.loginForm.value.userName;
-      const password = this.loginForm.value.password;
-
-      // Aquí puedes agregar la lógica de inicio de sesión
-      console.log('Usuario:', userName);
-      console.log('Contraseña:', password);
-    }
+      
+      this.service.login(this.loginForm.value).subscribe((data: any) =>{
+       localStorage.setItem( 'userName', data.result.userName);
+       localStorage.setItem('token_value', data.result.token);
+       localStorage.setItem('userInfo', data.result);
+       alert(data.displayMessage);
+       this.router.navigate(['/analisis'])
+      })
+  
+      }
   }
 }
