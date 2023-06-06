@@ -31,7 +31,8 @@
 }
 
 .content {
-  margin-top: 64px;
+  /* margin-top: 64px; */
+  height: 64px;
 }
 
 

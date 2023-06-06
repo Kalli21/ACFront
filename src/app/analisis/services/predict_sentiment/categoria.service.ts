@@ -17,6 +17,11 @@ export class CategoriaService {
     return this.http.get(this.baserUrl);
   }
 
+  getCategoriabyname(username:string,name: string) {
+
+    return this.http.get(this.baserUrl + 'username/cat/'+username+'/'+name);
+  }
+
   getCategoria(id: number) {
 
     return this.http.get(this.baserUrl + id);

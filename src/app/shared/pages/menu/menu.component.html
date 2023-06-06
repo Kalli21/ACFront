@@ -38,7 +38,10 @@
       </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>
-  <mat-sidenav-content  [ngClass]="{'content': shouldShowMenu()}">
+  <mat-sidenav-content  >
+    <div [ngClass]="{'content': shouldShowMenu()}">
+
+    </div>
     <div>
       <router-outlet></router-outlet>
       <!-- Contenido principal de la página -->

@@ -1,7 +1,7 @@
 import { IProducto } from "./IProducto";
 
 export interface ICategoria {
-  categoriaId: number;
+  id: number;
   nombre: string;
   productos: IProducto[];
   userName: string;

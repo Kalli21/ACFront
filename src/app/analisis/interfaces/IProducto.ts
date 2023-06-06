@@ -1,13 +1,14 @@
+import { ICategoria } from "./ICategoria";
 import { IComentario } from "./IComentario";
 
 export interface IProducto {
-    productoId: number;
-    codProduct: string;
-    nombre: string;
-    descripcion: string;
-    precio: number;
-    urlImg: string;
-    usuarioId: number;
-    categoriaId: number;
-    comentarios: IComentario[];
-  }
+  id: number;
+  codProducto: string;
+  nombre: string;
+  descripcion: string;
+  precio: number;
+  urlImg: string;
+  usuarioId: number;
+  categorias: ICategoria[];
+  comentarios: IComentario[];
+}

@@ -1,8 +1,8 @@
 
 export interface IComentario {
-    comentarioId: number;
+    id: number;
     contenido: string;
-    fecha: string;
+    fecha?: string;
     productoId: number;
     clienteId: number;
     userName: string;
