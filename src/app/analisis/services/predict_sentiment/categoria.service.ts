@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { ICategoria } from '../../interfaces/ICategoria';
+import { ICategoria } from '../../interfaces/predic_sentiment/ICategoria';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoriaService {
 
-  baserUrl: string = environment.apiUrl + '/api/Categoria/';
+  baserUrl: string = environment.apiBackUrl + '/api/Categoria/';
 
   constructor(private http: HttpClient) { }
 

@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { IProducto } from '../../interfaces/IProducto';
+import { IProducto } from '../../interfaces/predic_sentiment/IProducto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductoService {
 
-  baserUrl: string = environment.apiUrl + '/api/Producto/';
+  baserUrl: string = environment.apiBackUrl + '/api/Producto/';
 
   constructor(private http: HttpClient) { }
 

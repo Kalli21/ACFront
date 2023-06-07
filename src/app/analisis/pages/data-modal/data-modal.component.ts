@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { IDataCSV } from '../../interfaces/IDataCSV';
+import { IDataCSV } from '../../interfaces/predic_sentiment/IDataCSV';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({

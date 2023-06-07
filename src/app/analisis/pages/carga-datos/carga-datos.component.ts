@@ -3,17 +3,21 @@ import { MatDialog } from '@angular/material/dialog';
 import { DataModalComponent } from '../data-modal/data-modal.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { IDataCSV } from '../../interfaces/IDataCSV';
+import { IDataCSV } from '../../interfaces/predic_sentiment/IDataCSV';
 import { CategoriaService } from '../../services/predict_sentiment/categoria.service';
 import { ClienteService } from '../../services/predict_sentiment/cliente.service';
 import { ComentarioService } from '../../services/predict_sentiment/comentario.service';
 import { ProductoService } from '../../services/predict_sentiment/producto.service';
-import { ICategoria } from '../../interfaces/ICategoria';
-import { IProducto } from '../../interfaces/IProducto';
-import { ICliente } from '../../interfaces/ICliente';
-import { IComentario } from '../../interfaces/IComentario';
+import { ICategoria } from '../../interfaces/predic_sentiment/ICategoria';
+import { IProducto } from '../../interfaces/predic_sentiment/IProducto';
+import { ICliente } from '../../interfaces/predic_sentiment/ICliente';
+import { IComentario } from '../../interfaces/predic_sentiment/IComentario';
 import { concatMap, map, tap, toArray } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
+import { SentimentPredictService } from '../../services/clasModel/sentiment-predict.service';
+import { IClasModelCom } from '../../interfaces/clasModel/IClasModel';
+import { TopicModelingService } from '../../services/topicModel/topic-modeling.service';
+import { ITopicModel } from '../../interfaces/topicModel/ITopicModel';
 
 
 @Component({
@@ -28,6 +32,10 @@ export class CargaDatosComponent {
   pageSize = 5;
   pageIndex = 0;
   length = 0;
+  cantData = 0;
+  cantDataPros = 0;
+  cantDataTopic = 0;
+  numTemas = 20;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -35,7 +43,9 @@ export class CargaDatosComponent {
     private cartegoriaServices: CategoriaService,
     private clienteServices: ClienteService,
     private comentarioServices: ComentarioService,
-    private productoServices: ProductoService) { }
+    private productoServices: ProductoService,
+    private modelPredicSetimentServices: SentimentPredictService,
+    private topiModelingServices: TopicModelingService) { }
 
   openCsvModal(): void {
     const dialogRef = this.dialog.open(DataModalComponent);
@@ -66,20 +76,22 @@ export class CargaDatosComponent {
     }
 
     if (userName) {
+      this.cantData = data.length;
       of(...data).pipe(
         concatMap((e: IDataCSV) => {
           return this.crearCategoria(e, userName).pipe(
             concatMap((datcategoria: ICategoria) => {
               return this.crearProducto(e, userid).pipe(
-                concatMap((datproducto: IProducto	) => {
+                concatMap((datproducto: IProducto) => {
                   const prod = datproducto;
-                  return this.actualizarProducto(prod,datcategoria).pipe(
+                  return this.actualizarProducto(prod, datcategoria).pipe(
                     concatMap(() => {
                       return this.crearCliente(e, userName).pipe(
                         concatMap((datcliente: ICliente) => {
                           const cli = datcliente;
-                          return this.crearComentario(e,userName,datcliente,datproducto).pipe(
-                            map((com:IComentario) => {                              
+                          return this.crearComentario(e, userName, datcliente, datproducto).pipe(
+                            map((com: IComentario) => {
+                              this.subirComentarioModelPredict(userName, com);
                               return { categoria: datcategoria, producto: prod, cliente: cli, comentario: com };
                             })
                           );
@@ -94,10 +106,10 @@ export class CargaDatosComponent {
         }),
         toArray(),
         tap((resultados: any[]) => {
-          console.log('Operaciones completadas:', resultados);
+          // console.log('Operaciones completadas:', resultados);
         })
       ).subscribe(() => {
-        console.log('Todas las operaciones han sido completadas.');
+        // console.log('Todas las operaciones han sido completadas.');
       });
     }
   }
@@ -137,10 +149,10 @@ export class CargaDatosComponent {
     );
   }
 
-  actualizarProducto(producto: IProducto,categoria: ICategoria): Observable<void> {
-    if (producto.categorias.some( p=> p.nombre === categoria.nombre)){
+  actualizarProducto(producto: IProducto, categoria: ICategoria): Observable<void> {
+    if (producto.categorias.some(p => p.nombre === categoria.nombre)) {
       producto.categorias = [];
-    }else{
+    } else {
       producto.categorias = [];
       producto.categorias.push(categoria);
     }
@@ -165,7 +177,7 @@ export class CargaDatosComponent {
     );
   }
 
-  crearComentario(e:IDataCSV,userName: string, cli: ICliente,prod:IProducto): Observable<IComentario> {
+  crearComentario(e: IDataCSV, userName: string, cli: ICliente, prod: IProducto): Observable<IComentario> {
     const ff = e.Fecha;
     const com: IComentario = {
       id: 0,
@@ -176,7 +188,7 @@ export class CargaDatosComponent {
       userName: userName
     };
     return this.comentarioServices.crearComentario(com).pipe(
-      map((data:any) => { 
+      map((data: any) => {
         return data.result;
       })
     );
@@ -190,6 +202,47 @@ export class CargaDatosComponent {
       return fecha.toISOString();
     }
     return undefined;
+
+  }
+
+  subirComentarioModelPredict(userName: string, com: IComentario) {
+    const predicCom: IClasModelCom = {
+      id: com.id.toString(),
+      text: com.contenido,
+      probabilidades: [],
+      categoria: -1,
+    }
+
+    this.modelPredicSetimentServices.subirComentario(userName, [predicCom]).subscribe( () => {
+      this.cantDataPros += 1;
+    });
+    
+    const topiCom: ITopicModel = {
+      id: com.id.toString(),
+      text: com.contenido,
+      temas: {},
+    }
+
+    this.topiModelingServices.subirComentario(userName,[topiCom]).subscribe( () => {      
+      this.cantDataTopic += 1;
+    });
+
+    // Aquí agregamos el código para realizar acciones después de todas las inserciones
+    const inserciones = []; // Array para almacenar todas las observables de las inserciones
+
+    // Agregar más llamadas a this.modelPredicSetimentServices.subirComentario si es necesario
+    inserciones.push(this.modelPredicSetimentServices.subirComentario(userName, [predicCom]));
+    inserciones.push(this.topiModelingServices.subirComentario(userName, [topiCom]));
+
+    forkJoin(inserciones).subscribe(results => {
+      // Todas las inserciones han terminado
+      // console.log("Todas las inserciones FAST API han terminado");
+      // Aquí puedes realizar las acciones que desees
+      if (this.cantData === this.cantDataPros && this.cantData === this.cantDataTopic){        
+        this.modelPredicSetimentServices.ejecutarPrediccion(userName).subscribe( d => { });
+        this.topiModelingServices.ejecutarTopicModeling(userName,this.numTemas).subscribe( d => { });
+      }
+    });
 
   }
 

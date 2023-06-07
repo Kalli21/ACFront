@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { IComentario } from '../../interfaces/IComentario';
+import { IComentario } from '../../interfaces/predic_sentiment/IComentario';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComentarioService {
 
-  baserUrl: string = environment.apiUrl + '/api/Comentario/';
+  baserUrl: string = environment.apiBackUrl + '/api/Comentario/';
 
   constructor(private http: HttpClient) { }
 

@@ -10,7 +10,7 @@ import { IUsuario } from '../../interfaces/IUsuario';
 })
 export class UsuarioService {
 
-  baserUrl: string = environment.apiUrl + '/api/Usuario/';
+  baserUrl: string = environment.apiBackUrl + '/api/Usuario/';
 
   constructor(private http: HttpClient,
               private router: Router) { }
