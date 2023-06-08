@@ -18,23 +18,51 @@
     [opened]="isMenuFixed"
     [style.width.px]="isMenuFixed ? 280 : 0"
   >
-    <!-- Contenido del menú -->
     <mat-nav-list>
       <mat-list-item>
-        <mat-icon matListIcon>inbox</mat-icon>
-        <span matLine>Inbox</span>
+        <div class = "menuTitulo" >
+          <h1>Bienvenido </h1>
+        </div>        
       </mat-list-item>
       <mat-list-item>
-        <mat-icon matListIcon>star</mat-icon>
-        <span matLine>Starred</span>
+        <div class = "menuTitulo" >
+          <h3>Carga de Datos </h3>
+        </div>        
+      </mat-list-item>
+      <mat-list-item [routerLink]="'/analisis/cargadatos'" [routerLinkActive]="['is-active']">
+        <div class="row justify-content-start" >
+          <div class="col-2">
+            <mat-icon class="menuIcono" matListIcon>circle</mat-icon>        
+          </div>
+          <div class="col-4">
+            <span matLine>Subir Archivo</span>
+          </div>
+        </div>
       </mat-list-item>
       <mat-list-item>
-        <mat-icon matListIcon>send</mat-icon>
-        <span matLine>Sent Mail</span>
+        <div class = "menuTitulo" >
+          <h3>Análisis </h3>
+        </div>        
       </mat-list-item>
-      <mat-list-item>
-        <mat-icon matListIcon>drafts</mat-icon>
-        <span matLine>Drafts</span>
+      <mat-list-item [routerLink]="'/analisis/general'" [routerLinkActive]="['is-active']">
+        <div class="row justify-content-start" >
+          <div class="col-2">
+            <mat-icon class="menuIcono" matListIcon >circle</mat-icon>        
+          </div>
+          <div class="col-4">
+            <span matLine>General</span>
+          </div>
+        </div>
+      </mat-list-item>
+      <mat-list-item [routerLink]="'/analisis/producto'" [routerLinkActive]="['is-active']">
+        <div class="row justify-content-start" >
+          <div class="col-2">
+            <mat-icon class="menuIcono" matListIcon >circle</mat-icon>        
+          </div>
+          <div class="col-4">
+            <span matLine>Producto</span>
+          </div>
+        </div>
       </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>

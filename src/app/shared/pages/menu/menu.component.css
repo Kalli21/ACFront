@@ -13,7 +13,7 @@
 
 
 .mat-sidenav {
-  margin-top: 64px;
+  padding-top: 64px;
   /* Ajusta el valor según la altura del mat-toolbar */
 }
 
@@ -47,4 +47,26 @@
 .wrapper {
   height: calc(100vh);
   background: black;
+}
+
+.textlist{
+  padding: 0;
+}
+
+.menuTitulo{
+  text-align: start;
+  vertical-align: center;
+}
+
+.menuIcono{
+  transform: scale(0.5);
+}
+
+.is-active {
+  background-color: #4d4c6f;
+  border-radius: 20px;    
+}
+mat-list-item:focus {
+  background-color: #151342;
+  border-radius: 20px;
 }
