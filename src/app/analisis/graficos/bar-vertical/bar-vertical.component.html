@@ -1,0 +1,17 @@
+<mat-card class="cardBarVerticalGraf">
+    <ngx-charts-bar-vertical-stacked
+    [view]="view"
+    [scheme]="colorScheme"
+    [results]="multi"
+    [gradient]="gradient"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [legend]="showLegend"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [animations]="animations"
+    (select)="onSelect($event)">
+  </ngx-charts-bar-vertical-stacked>
+</mat-card>

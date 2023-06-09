@@ -1,0 +1,47 @@
+<mat-card class="cardCircularGraf">
+  <mat-list>
+    <mat-list-item>
+      <h3>Comentarios de clientes</h3>
+    </mat-list-item>
+  </mat-list>
+
+  <div class="chart-container">
+    <ngx-charts-pie-chart
+      [view]="view"
+      [scheme]="colorScheme"
+      [results]="single"
+      [gradient]="gradient"
+      [legend]="showLegend"
+      [legendPosition]="legendPosition"
+      [labels]="showLabels"
+      [doughnut]="isDoughnut"
+      (select)="onSelect($event)"
+      (activate)="onActivate($event)"
+      (deactivate)="onDeactivate($event)"
+    >
+    </ngx-charts-pie-chart>
+    <div class="chart-text">
+      <div>
+        <h4>{{ totalStr }}</h4>
+      </div>
+      <div>
+        <h4>Comentarios</h4>
+      </div>
+    </div>
+  </div>
+
+  <mat-list>
+    <mat-list-item *ngFor="let item of items">
+      <div class="row justify-content-center">
+        <div class="col-2">
+          <mat-icon class="circelIcon" matListIcon [style.color]="item.color">squareRounded</mat-icon>        
+        </div>
+        <div class="col-6">
+          <span matLine>{{ item.text }}</span>
+        </div>      
+      </div>
+    </mat-list-item>
+  </mat-list>
+  
+
+</mat-card>
