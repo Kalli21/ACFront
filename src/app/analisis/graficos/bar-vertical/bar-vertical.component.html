@@ -1,17 +1,69 @@
 <mat-card class="cardBarVerticalGraf">
+  <mat-list>
+    <mat-list-item>
+      <h3>Sentimiento por mes</h3>
+    </mat-list-item>
+  </mat-list>
+  <div class="chart-container">
     <ngx-charts-bar-vertical-stacked
-    [view]="view"
-    [scheme]="colorScheme"
-    [results]="multi"
-    [gradient]="gradient"
-    [xAxis]="showXAxis"
-    [yAxis]="showYAxis"
-    [legend]="showLegend"
-    [showXAxisLabel]="showXAxisLabel"
-    [showYAxisLabel]="showYAxisLabel"
-    [xAxisLabel]="xAxisLabel"
-    [yAxisLabel]="yAxisLabel"
-    [animations]="animations"
-    (select)="onSelect($event)">
-  </ngx-charts-bar-vertical-stacked>
+      [view]="view"
+      [scheme]="colorScheme"
+      [results]="multi"
+      [gradient]="gradient"
+      [xAxis]="showXAxis"
+      [yAxis]="showYAxis"
+      [legend]="showLegend"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      [animations]="animations"
+      (select)="onSelect($event)"
+      style="fill: #ffff"
+    >
+    </ngx-charts-bar-vertical-stacked>
+  </div>
+  <mat-list>
+    <mat-list-item >
+      <div class="row align-items-center justify-content-start">
+        <div class="col-1">
+          <div class="row justify-content-start" >
+            <div class="col-1">
+              <mat-icon class="circelIcon" matListIcon style="color: #52AC56;"
+                >circle</mat-icon
+              >
+            </div>
+            <div class="col-1">
+              <span matLine>Positivo</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="row justify-content-start" >
+            <div class="col-1">
+              <mat-icon class="circelIcon" matListIcon style="color: #E5DC27;"
+                >circle</mat-icon
+              >
+            </div>
+            <div class="col-1">
+              <span matLine>Neutro</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="row justify-content-start" >
+            <div class="col-1">
+              <mat-icon class="circelIcon" matListIcon style="color: #B3261E;"
+                >circle</mat-icon
+              >
+            </div>
+            <div class="col-1">
+              <span matLine>Negativo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </mat-list-item>
+  </mat-list>
 </mat-card>

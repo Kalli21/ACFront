@@ -211,6 +211,7 @@ export class CargaDatosComponent {
       text: com.contenido,
       probabilidades: [],
       categoria: -1,
+      fecha: com.fecha || ''
     }
 
     this.modelPredicSetimentServices.subirComentario(userName, [predicCom]).subscribe( () => {
@@ -221,6 +222,7 @@ export class CargaDatosComponent {
       id: com.id.toString(),
       text: com.contenido,
       temas: {},
+      fecha: com.fecha || ''
     }
 
     this.topiModelingServices.subirComentario(userName,[topiCom]).subscribe( () => {      

@@ -1,5 +1,27 @@
-.mapTreeGraf{
+.mapTreeGraf {
+    height: 530px;
     margin-top: 20px;
     border-radius: 20px;
-    overflow: hidden;
+    overflow: auto;
+    background-color: #141218;    
+}
+
+.mat-button-toggle-group {
+    margin-left: 12px;
+    justify-content: center;
+    display: flex;
+    border-radius: 40px;
+}
+.mat-button-toggle{
+    width: 100%;
+}
+.mat-button-toggle-checked {
+    background-color: #4A4458;
+    color: white; 
+
+}
+
+.iconCheck{
+    transform: scale(0.8);
+    padding-top: 5px;
 }

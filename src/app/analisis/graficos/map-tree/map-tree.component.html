@@ -1,11 +1,47 @@
 <mat-card class="mapTreeGraf">
-    <ngx-charts-tree-map
+  <mat-list>
+    <mat-list-item>
+      <h3>Ranking Productos</h3>
+    </mat-list-item>
+
+    <mat-list-item>
+      <mat-button-toggle-group
+        appearance="legacy"
+        name="fontStyle"
+        aria-label="Font Style"
+        (change)="onButtonToggleChange($event)"
+      >
+        <mat-button-toggle value="positivo" [checked]="botonSeleccionado === 'positivo'">
+          <div class="row justify-content-start  align-items-center" >
+            <div class="col-2">
+              <mat-icon matListIcon class="iconCheck" *ngIf="botonSeleccionado === 'positivo'">check</mat-icon>        
+            </div>
+            <div class="col-4">
+              <span matLine style="color: #52AC56" >Positivo</span>
+            </div>
+          </div>
+        </mat-button-toggle>
+        <mat-button-toggle value="negativo" [checked]="botonSeleccionado === 'negativo'">
+          <div class="row justify-content-start  align-items-center" >            
+            <div class="col-7">
+              <span matLine style="color: #B3261E">Negativo</span>
+            </div>
+            <div class="col-2">
+              <mat-icon matListIcon class="iconCheck" *ngIf="botonSeleccionado === 'negativo'">check</mat-icon>        
+            </div>
+          </div>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </mat-list-item>
+  </mat-list>
+  <ngx-charts-tree-map
     [view]="view"
     [scheme]="colorScheme"
     [results]="single"
     [gradient]="gradient"
     [animations]="animations"
     [labelFormatting]="labelFormatting"
-    (select)="onSelect($event)">
+    (select)="onSelect($event)"
+  >
   </ngx-charts-tree-map>
 </mat-card>

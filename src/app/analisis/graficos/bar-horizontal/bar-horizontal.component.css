@@ -1,5 +1,11 @@
 .cardBarHorizontalGraf {
+  height: 530px;
   margin-top: 20px;
   border-radius: 20px;
-  overflow: hidden;
-} 
+  background-color: #141218;
+  overflow: auto;
+}
+
+.circelIcon{
+  transform: scale(0.5);
+}

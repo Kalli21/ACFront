@@ -1,7 +1,9 @@
 .cardCircularGraf {
+  height: 530px;
   margin-top: 20px;
   border-radius: 20px;
-  overflow: hidden;
+  overflow: auto;
+  background-color: #141218;
   
 }
 .circelIcon{

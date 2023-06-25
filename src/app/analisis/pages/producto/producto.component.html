@@ -1,1 +1,33 @@
-<app-circular></app-circular>
+<div class="container">
+  <div class="row align-items-center">
+    <div class="col">
+      <app-filtros (infoProducto)="onInfoProducto($event)" ></app-filtros>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-3 align-self-start">
+        <app-card-producto [infoProducto]="infoProducto" ></app-card-producto>
+      </div>
+      <div class="col-9">
+        <div class="row justify-content-evenly">
+          <div class="col-4">
+            <app-circular [info]="infoCirculo"></app-circular>
+          </div>
+          <div class="col-4">
+            <app-bar-horizontal-v2
+              [dataBarHorizontal]="dataBarHorizontal"
+              [titulo]="tituloBarHorizontal"
+            ></app-bar-horizontal-v2>
+          </div>
+          <div class="col-4">
+            <app-word-cloud [dataWordCloud]="dataWordCloud"></app-word-cloud>
+          </div>
+        </div>
+        <div class="row justify-content-evenly">
+          <app-tabla-comentarios [comentarios]="dataComentarios"></app-tabla-comentarios>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

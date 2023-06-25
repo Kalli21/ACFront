@@ -21,6 +21,7 @@ export class TopicModelingService {
   }
   
   getTemas(username: string, numWord: number){
+
     return this.http.get(this.baserUrl + '/temas/' + username + '/' + numWord);
   }
   
@@ -48,4 +49,12 @@ export class TopicModelingService {
     return this.http.delete(this.baserUrl + '/delete/' + username + '/' + senteceId)
   }
 
+  getTemasByComentarios(username: string,ids: string[],numWord: number,filtro:number[]){
+    const obj = {
+      "ids": ids,
+      "filtro":filtro
+    }
+    return this.http.post(this.baserUrl + '/temas/comentarios/' + username + '/' +numWord,obj)
+    
+  }
 }

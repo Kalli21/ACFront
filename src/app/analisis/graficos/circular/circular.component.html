@@ -17,12 +17,12 @@
       [doughnut]="isDoughnut"
       (select)="onSelect($event)"
       (activate)="onActivate($event)"
-      (deactivate)="onDeactivate($event)"
+      (deactivate)="onDeactivate($event)" 
     >
     </ngx-charts-pie-chart>
     <div class="chart-text">
       <div>
-        <h4>{{ totalStr }}</h4>
+        <h4>{{ info.total }}</h4>
       </div>
       <div>
         <h4>Comentarios</h4>

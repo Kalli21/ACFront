@@ -1,21 +1,26 @@
 <div class="container">
+  <div class="row align-items-center">
+    <div class="col">
+      <app-filtros></app-filtros>
+    </div>
+  </div>
   <div class="row justify-content-evenly">
     <div class="col-3">
       <app-circular [info]="data"></app-circular>
     </div>
     <div class="col-3">
-      <app-map-tree></app-map-tree>
+      <app-map-tree [dataTreeMap]="dataTreeMap"></app-map-tree>
     </div>
     <div class="col-3">
-      <app-bar-horizontal></app-bar-horizontal>
-    </div>    
+      <app-bar-horizontal [dataCategoria]="dataCategoria"></app-bar-horizontal>
+    </div>
     <div class="col-3">
-      <app-map-tree></app-map-tree>
+      <app-word-cloud [dataWordCloud]="dataWordCloud"></app-word-cloud>
     </div>
   </div>
   <div class="row justify-content-evenly">
     <div class="col-12">
-      <app-bar-vertical></app-bar-vertical>
+      <app-bar-vertical [dataBarFecha]="dataBarFecha"></app-bar-vertical>
     </div>
   </div>
 </div>

@@ -41,4 +41,10 @@ export class CategoriaService {
 
     return this.http.delete(this.baserUrl + id);
   }
+
+  getCategoriasConComentarios(username: string){
+    
+    return this.http.get(this.baserUrl + 'username/coment/'+username);
+  }
+
 }

@@ -3,4 +3,5 @@ export interface IClasModelCom {
   text: string;
   probabilidades: any[];
   categoria: number;
+  fecha: string;
 }

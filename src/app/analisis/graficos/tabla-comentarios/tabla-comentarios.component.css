@@ -1,0 +1,35 @@
+.cardTablaComentarios {
+    min-height: 200px;
+    margin-top: 20px;
+    border-radius: 20px;
+    background-color: #141218;
+    overflow: auto;
+}
+
+.tablaComentarios {
+    margin: 20px;
+}
+
+/* tabla-comentarios.component.css */
+.no-rotate {
+    color: #52AC56;
+    /* Rotación de 90 grados */
+}
+
+.rotate-90 {
+    transform: rotate(90deg);
+    color: #E5DC27;
+    /* Rotación de 90 grados */
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+    color:#B3261E ;
+    /* Rotación de 180 grados */
+}
+
+.like-cell,
+.probabilidad-cell {
+    text-align: center;
+    /* Centrar horizontalmente el contenido de las celdas "like" y "probabilidad" */
+}

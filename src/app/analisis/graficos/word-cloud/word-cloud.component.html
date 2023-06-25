@@ -1,0 +1,16 @@
+<mat-card class="wordCloudGraf">
+  <mat-list>
+    <mat-list-item>
+      <h3>Temas hablados</h3>
+    </mat-list-item>
+  </mat-list>
+  <div>
+    <angular-tag-cloud
+      [data]="data"
+      [width]="options.width"
+      [height]="options.height"
+      [overflow]="options.overflow"
+    >
+    </angular-tag-cloud>
+  </div>
+</mat-card>

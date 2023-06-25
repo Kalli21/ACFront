@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { IComentario } from '../../interfaces/predic_sentiment/IComentario';
+import { IComentariosFiltros } from '../../interfaces/predic_sentiment/Request/IComentariosFiltros';
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +36,9 @@ export class ComentarioService {
   deleteComentario(id: number) {
 
     return this.http.delete(this.baserUrl + id);
+  }
+
+  getComentariosConFiltros(username: string, filtro : IComentariosFiltros){
+    return this.http.post(this.baserUrl + 'username/' + username, filtro);
   }
 }

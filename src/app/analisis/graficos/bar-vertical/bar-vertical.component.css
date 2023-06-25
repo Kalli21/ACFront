@@ -1,5 +1,21 @@
 .cardBarVerticalGraf {
-    margin-top: 20px;  
-    border-radius: 20px;
-    overflow: hidden;
+  margin-top: 20px;
+  border-radius: 20px;
+  overflow: auto;
+  background-color: #141218;
+
+}
+
+.axis-label.x-axis {
+  fill: red;
+  /* Cambia el color del texto del eje X a rojo */
+}
+
+.axis-label.y-axis {
+  fill: blue;
+  /* Cambia el color del texto del eje Y a azul */
+}
+
+.circelIcon {
+  transform: scale(0.5);
 }
