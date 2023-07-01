@@ -22,29 +22,6 @@ export class WordCloudComponent implements OnChanges {
     // Agrega más palabras y sus pesos aquí
   ];
   constructor(private cdr: ChangeDetectorRef) {}
-  
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   console.log("WORDCLOUD")  
-  //   console.log(this.dataWordCloud)
-  //   console.log("WORDCLOUD")  
-  //   console.log(this.data)
-  //   for (const key in this.dataWordCloud) {
-  //     if (this.dataWordCloud.hasOwnProperty(key)) {
-  //       const valueObj = this.dataWordCloud[key];
-  //       const valueKey = Object.keys(valueObj)[0];
-  //       const value = valueObj[valueKey];
-
-  //       const item = {
-  //         text: value,
-  //         weight: parseFloat(valueKey),
-  //       };
-
-  //       this.data.push(item);
-  //       this.cdr.detectChanges();
-  //     }
-  //   }
-    
-  // }
 
   ngOnChanges(changes: SimpleChanges): void {
     const dataWordCloudChange = changes['dataWordCloud'];

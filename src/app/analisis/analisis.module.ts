@@ -23,7 +23,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { WordCloudComponent } from './graficos/word-cloud/word-cloud.component';
 import { TagCloudComponent } from 'angular-tag-cloud-module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { FiltrosComponent } from './shared/filtros/filtros.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -35,6 +34,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { BarHorizontalV2Component } from './graficos/bar-horizontal-v2/bar-horizontal-v2.component';
 import { TablaComentariosComponent } from './graficos/tabla-comentarios/tabla-comentarios.component';
+import { FiltrosPaginaProductosComponent } from './shared/filtros/filtros-pagina-productos/filtros-pagina-productos.component';
+import { FiltrosPaginaGeneralComponent } from './shared/filtros/filtros-pagina-general/filtros-pagina-general.component';
+import {  MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -47,10 +49,11 @@ import { TablaComentariosComponent } from './graficos/tabla-comentarios/tabla-co
     MapTreeComponent,
     BarVerticalComponent,
     WordCloudComponent,
-    FiltrosComponent,
     CardProductoComponent,
     BarHorizontalV2Component,
     TablaComentariosComponent,
+    FiltrosPaginaProductosComponent,
+    FiltrosPaginaGeneralComponent,
   ],
   imports: [
     CommonModule,
@@ -75,6 +78,7 @@ import { TablaComentariosComponent } from './graficos/tabla-comentarios/tabla-co
     MatToolbarModule,
     MatAutocompleteModule,
     MatInputModule,
+    MatProgressBarModule
   ],
 })
 export class AnalisisModule {}

@@ -65,7 +65,7 @@ export class CircularComponent implements   OnChanges {
   constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.single = [
       {
-        "name": "Negativo",
+        "name": "Positivo",
         "value": 0
       },
       {
@@ -73,7 +73,7 @@ export class CircularComponent implements   OnChanges {
         "value": 0
       },
       {
-        "name": "Positivo",
+        "name": "Negativo",
         "value": 0
       }  
     ];
@@ -82,8 +82,8 @@ export class CircularComponent implements   OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.single[0].value = this.info.pos; 
-    this.single[1].value = this.info.neg;
-    this.single[2].value = this.info.net;
+    this.single[1].value = this.info.net;
+    this.single[2].value = this.info.neg;
     Object.assign(this, { single: [...this.single] });
     this.changeDetectorRef.detectChanges();
   }

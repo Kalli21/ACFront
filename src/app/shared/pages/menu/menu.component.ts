@@ -11,7 +11,7 @@ import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 export class MenuComponent {
   isMenuFixed = false;
   isLoading = true;
- 
+  userName = localStorage.getItem('userName') || '';
   constructor(private router: Router) {
     router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {

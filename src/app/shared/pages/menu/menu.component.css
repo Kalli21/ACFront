@@ -52,8 +52,15 @@
 .textlist{
   padding: 0;
 }
-
+.menuTituloPrincipal{
+  margin-top: 30px;
+  margin-bottom: 30px;
+  vertical-align: center;
+  text-align: center;
+}
 .menuTitulo{
+  margin-top: 10px;
+  margin-bottom: q0px;
   text-align: start;
   vertical-align: center;
 }

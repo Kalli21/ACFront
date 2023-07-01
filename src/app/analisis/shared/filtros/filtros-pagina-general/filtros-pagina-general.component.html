@@ -1,0 +1,82 @@
+<div class="cardFiltros">
+  <div class="row align-items-center justify-content-evenly">
+    <div class="col-3 datecol">
+      <div class="row align-items-center justify-content-evenly">
+        <div class="col">
+          <mat-form-field class="example-form-field">
+            <mat-label>Rango de Fechas </mat-label>
+            <mat-date-range-input
+              [formGroup]="campaignOne"
+              [rangePicker]="campaignOnePicker"
+            >
+              <input
+                matStartDate
+                placeholder="Start date"
+                formControlName="start"
+              />
+              <input matEndDate placeholder="End date" formControlName="end" />
+            </mat-date-range-input>
+            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="campaignOnePicker"
+            ></mat-datepicker-toggle>
+            <mat-date-range-picker #campaignOnePicker>
+              <mat-datepicker-actions>
+                <button mat-button matDatepickerCancel (click)="clearDates()">
+                  Cancel
+                </button>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  matDatepickerApply
+                  (click)="onDateSelect()"
+                >
+                  Aplicar
+                </button>
+              </mat-datepicker-actions>
+            </mat-date-range-picker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 datecol">
+      <div class="row align-items-center justify-content-evenly">
+        <div class="col-5 datecol">
+          <mat-form-field class="example-form-field">
+            <mat-label>Sentimiento</mat-label>
+            <mat-select
+              [(value)]="selecSentimiento"
+              (selectionChange)="onSelectSentimiento($event.value)"
+              [disabled]="grafGeneralService.cargando"
+            >
+              <mat-option>None</mat-option>
+              <mat-option value="Positivo">Positivo</mat-option>
+              <mat-option value="Neutro">Neutro</mat-option>
+              <mat-option value="Negativo">Negativo</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-5 datecol">
+          <mat-form-field class="example-form-field">
+            <mat-label>Categoria</mat-label>
+            <mat-select
+              [(value)]="selecCategoria"
+              (selectionChange)="onSelectCategoria()"
+              [disabled]="grafGeneralService.cargando"
+            >
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let cat of listCategorias" [value]="cat">
+                {{ cat.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col" style="margin-top: 30px" *ngIf="grafGeneralService.cargando">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>

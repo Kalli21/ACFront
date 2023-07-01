@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { IClasModelCom } from '../../interfaces/clasModel/IClasModel';
 import { IClasStats } from '../../interfaces/clasModel/IClasStats';
 import { ICategoria } from '../../interfaces/predic_sentiment/ICategoria';
+import { IFiltroPaginaGeneral } from '../../interfaces/clasModel/request/IFiltroPaginaGeneral';
 
 @Injectable({
   providedIn: 'root'
@@ -50,8 +51,8 @@ export class SentimentPredictService {
     return this.http.delete(this.baserUrl + '/delete/' + username + '/' + comId)
   }
   ///////
-  gestionarData(username: string, cats: ICategoria){    
-    return this.http.post(this.baserUrl + '/getionar/' + username, cats)
+  gestionarData(username: string, filtrosPaginaGeneral: IFiltroPaginaGeneral){    
+    return this.http.post(this.baserUrl + '/getionar/' + username, filtrosPaginaGeneral)
   }
 
   getComentariosGroupFechaFiltroIds(username: string,ids: string[]){

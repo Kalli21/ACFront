@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DataModalComponent } from '../data-modal/data-modal.component';
 import { MatTableDataSource } from '@angular/material/table';
@@ -12,7 +12,7 @@ import { ICategoria } from '../../interfaces/predic_sentiment/ICategoria';
 import { IProducto } from '../../interfaces/predic_sentiment/IProducto';
 import { ICliente } from '../../interfaces/predic_sentiment/ICliente';
 import { IComentario } from '../../interfaces/predic_sentiment/IComentario';
-import { concatMap, map, tap, toArray } from 'rxjs/operators';
+import { concatMap, map, retry, tap, toArray } from 'rxjs/operators';
 import { Observable, of, forkJoin } from 'rxjs';
 import { SentimentPredictService } from '../../services/clasModel/sentiment-predict.service';
 import { IClasModelCom } from '../../interfaces/clasModel/IClasModel';
@@ -25,10 +25,10 @@ import { ITopicModel } from '../../interfaces/topicModel/ITopicModel';
   templateUrl: './carga-datos.component.html',
   styleUrls: ['./carga-datos.component.css']
 })
-export class CargaDatosComponent {
-  displayedColumns: string[] = []; // Aquí debes especificar las columnas de tu tabla
+export class CargaDatosComponent implements OnInit {
+  displayedColumns: string[] = ['id','contenido','fecha','productoId','clienteId']; // Aquí debes especificar las columnas de tu tabla
   dataSource: MatTableDataSource<any> | null = null;
-  pageSizeOptions: number[] = [5, 10, 25, 100];
+  pageSizeOptions: number[] = [5, 10, 30 ];
   pageSize = 5;
   pageIndex = 0;
   length = 0;
@@ -37,7 +37,13 @@ export class CargaDatosComponent {
   cantDataTopic = 0;
   numTemas = 20;
 
+  cargaParcial = false;
+  analisisSentimento = false;
+  analisisTemas = false;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  isBackButtonDisabled = true;
+  userName = localStorage.getItem('userName') || '';
 
   constructor(private dialog: MatDialog,
     private cartegoriaServices: CategoriaService,
@@ -46,25 +52,45 @@ export class CargaDatosComponent {
     private productoServices: ProductoService,
     private modelPredicSetimentServices: SentimentPredictService,
     private topiModelingServices: TopicModelingService) { }
+  ngOnInit(): void {
+    this.getData();
+  }
+  getData(): void {
+    this.comentarioServices.getComentariosConPaginacion(this.userName,this.pageIndex + 1, this.pageSize).subscribe( (response: any) => {
+      this.dataSource = new MatTableDataSource(response.result);
+      this.dataSource.paginator = this.paginator;
+      this.length = response.result.length + 1;
+      if (this.dataSource) {
+        this.cargaParcial = true;
+      }
+      // Actualizar otras propiedades si es necesario
+    });
+  }
 
+  onPageChange(event: any): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.isBackButtonDisabled = this.pageIndex === 0;
+    this.getData();
+  }
+  goToPreviousPage(): void {
+    if (!this.isBackButtonDisabled) {
+      this.pageIndex--; // Actualizar el índice de página
+      this.isBackButtonDisabled = this.pageIndex === 0; // Deshabilitar el botón de retroceso si se encuentra en la primera página
+      this.getData();
+    }
+  }
   openCsvModal(): void {
     const dialogRef = this.dialog.open(DataModalComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.length > 0) {
-        this.dataSource = new MatTableDataSource(result); // Asigna los datos al dataSource
-        this.displayedColumns = Object.keys(result[0]); // Asigna las columnas
-        this.length = result.length; // Actualiza la longitud total de los datos
-        this.dataSource.paginator = this.paginator; // Asigna el paginador al dataSource
         this.guardarDatos(result);
       }
     });
   }
 
-  onPageChange(event: PageEvent): void {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-  }
+
 
   guardarDatos(data: IDataCSV[]) {
     const userName = localStorage.getItem('userName');
@@ -74,7 +100,7 @@ export class CargaDatosComponent {
       const obj = JSON.parse(objUser);
       userid = obj.id;
     }
-
+    this.cargaParcial = false;
     if (userName) {
       this.cantData = data.length;
       of(...data).pipe(
@@ -136,7 +162,7 @@ export class CargaDatosComponent {
       nombre: e.NombreProducto || '',
       descripcion: e.DescripcionProducto || '',
       precio: Number(e.PrecioProducto),
-      urlImg: '',
+      urlImg: e.Imagen || '',
       usuarioId: userid,
       categorias: [],
       comentarios: []
@@ -214,7 +240,9 @@ export class CargaDatosComponent {
       fecha: com.fecha || ''
     }
 
-    this.modelPredicSetimentServices.subirComentario(userName, [predicCom]).subscribe( () => {
+    this.modelPredicSetimentServices.subirComentario(userName, [predicCom])
+    .pipe(retry(3)) // Intentar 10 veces en caso de error
+    .subscribe(() => {
       this.cantDataPros += 1;
     });
     
@@ -225,7 +253,9 @@ export class CargaDatosComponent {
       fecha: com.fecha || ''
     }
 
-    this.topiModelingServices.subirComentario(userName,[topiCom]).subscribe( () => {      
+    this.topiModelingServices.subirComentario(userName, [topiCom])
+    .pipe(retry(3)) // Intentar 10 veces en caso de error
+    .subscribe(() => {
       this.cantDataTopic += 1;
     });
 
@@ -235,17 +265,34 @@ export class CargaDatosComponent {
     // Agregar más llamadas a this.modelPredicSetimentServices.subirComentario si es necesario
     inserciones.push(this.modelPredicSetimentServices.subirComentario(userName, [predicCom]));
     inserciones.push(this.topiModelingServices.subirComentario(userName, [topiCom]));
+                                               
 
     forkJoin(inserciones).subscribe(results => {
-      // Todas las inserciones han terminado
-      // console.log("Todas las inserciones FAST API han terminado");
-      // Aquí puedes realizar las acciones que desees
-      if (this.cantData === this.cantDataPros && this.cantData === this.cantDataTopic){        
-        this.modelPredicSetimentServices.ejecutarPrediccion(userName).subscribe( d => { });
-        this.topiModelingServices.ejecutarTopicModeling(userName,this.numTemas).subscribe( d => { });
+
+      if( this.cantData*0.9 <= this.cantDataPros && this.cantData*0.9 <= this.cantDataTopic ){
+        this.getData();   
+        this.cargaParcial = true;
       }
+        
     });
 
+  }
+  
+  ejecutarAnalisis(){
+    this.analisisSentimento = true;
+    this.analisisTemas = true;
+    this.modelPredicSetimentServices.ejecutarPrediccion(this.userName)
+    .pipe(retry(3))
+    .subscribe( d => {
+      this.analisisSentimento = false;
+     });
+    this.topiModelingServices.ejecutarTopicModeling(this.userName,this.numTemas)
+    .pipe(retry(3))
+    .subscribe( d => { 
+      this.analisisTemas = false;
+    });
+    
+  
   }
 
 }

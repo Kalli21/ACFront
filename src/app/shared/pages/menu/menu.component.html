@@ -1,84 +1,91 @@
 <ng-container *ngIf="!isLoading">
   <mat-toolbar
-  color="primary"
-  *ngIf="shouldShowMenu()"
-  class="mat-elevation-z4 fixed-toolbar"
->
-  <button mat-icon-button (click)="toggleMenu()">
-    <mat-icon> menu</mat-icon>
-  </button>
-  <span>App Title</span>
-</mat-toolbar>
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav
-    #sidenav
-    class="sidenav"
-    [fixedInViewport]="true"
-    [mode]="isMenuFixed ? 'side' : 'over'"
-    [opened]="isMenuFixed"
-    [style.width.px]="isMenuFixed ? 280 : 0"
+    color="primary"
+    *ngIf="shouldShowMenu()"
+    class="mat-elevation-z4 fixed-toolbar"
   >
-    <mat-nav-list>
-      <mat-list-item>
-        <div class = "menuTitulo" >
-          <h1>Bienvenido </h1>
-        </div>        
-      </mat-list-item>
-      <mat-list-item>
-        <div class = "menuTitulo" >
-          <h3>Carga de Datos </h3>
-        </div>        
-      </mat-list-item>
-      <mat-list-item [routerLink]="'/analisis/cargadatos'" [routerLinkActive]="['is-active']">
-        <div class="row justify-content-start" >
-          <div class="col-2">
-            <mat-icon class="menuIcono" matListIcon>circle</mat-icon>        
+    <button mat-icon-button (click)="toggleMenu()">
+      <mat-icon> menu</mat-icon>
+    </button>
+    <span></span>
+  </mat-toolbar>
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav
+      #sidenav
+      class="sidenav"
+      [fixedInViewport]="true"
+      [mode]="isMenuFixed ? 'side' : 'over'"
+      [opened]="isMenuFixed"
+      [style.width.px]="isMenuFixed ? 280 : 0"
+      style="background-color: #141218;"
+      >
+      <mat-nav-list >
+        <mat-list-item>
+          <div class="menuTituloPrincipal">
+            <h1>Bienvenido {{ userName }}</h1>
           </div>
-          <div class="col-4">
-            <span matLine>Subir Archivo</span>
+        </mat-list-item>
+        <mat-list-item>
+          <div class="menuTitulo">
+            <h3>Carga de Datos</h3>
           </div>
-        </div>
-      </mat-list-item>
-      <mat-list-item>
-        <div class = "menuTitulo" >
-          <h3>Análisis </h3>
-        </div>        
-      </mat-list-item>
-      <mat-list-item [routerLink]="'/analisis/general'" [routerLinkActive]="['is-active']">
-        <div class="row justify-content-start" >
-          <div class="col-2">
-            <mat-icon class="menuIcono" matListIcon >circle</mat-icon>        
+        </mat-list-item>
+        <mat-list-item
+          [routerLink]="'/analisis/cargadatos'"
+          [routerLinkActive]="['is-active']"
+        >
+          <div class="row justify-content-start">
+            <div class="col-2">
+              <mat-icon class="menuIcono" matListIcon>circle</mat-icon>
+            </div>
+            <div class="col-4">
+              <span matLine>Subir Archivo</span>
+            </div>
           </div>
-          <div class="col-4">
-            <span matLine>General</span>
+        </mat-list-item>
+        <mat-list-item>
+          <div class="menuTitulo">
+            <h3>Análisis</h3>
           </div>
-        </div>
-      </mat-list-item>
-      <mat-list-item [routerLink]="'/analisis/producto'" [routerLinkActive]="['is-active']">
-        <div class="row justify-content-start" >
-          <div class="col-2">
-            <mat-icon class="menuIcono" matListIcon >circle</mat-icon>        
+        </mat-list-item>
+        <mat-list-item
+          [routerLink]="'/analisis/general'"
+          [routerLinkActive]="['is-active']"
+        >
+          <div class="row justify-content-start">
+            <div class="col-2">
+              <mat-icon class="menuIcono" matListIcon>circle</mat-icon>
+            </div>
+            <div class="col-4">
+              <span matLine>General</span>
+            </div>
           </div>
-          <div class="col-4">
-            <span matLine>Producto</span>
+        </mat-list-item>
+        <mat-list-item
+          [routerLink]="'/analisis/producto'"
+          [routerLinkActive]="['is-active']"
+        >
+          <div class="row justify-content-start">
+            <div class="col-2">
+              <mat-icon class="menuIcono" matListIcon>circle</mat-icon>
+            </div>
+            <div class="col-4">
+              <span matLine>Producto</span>
+            </div>
           </div>
-        </div>
-      </mat-list-item>
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content  >
-    <div [ngClass]="{'content': shouldShowMenu()}">
-
-    </div>
-    <div>
-      <router-outlet></router-outlet>
-      <!-- Contenido principal de la página -->
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+        </mat-list-item>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div [ngClass]="{ content: shouldShowMenu() }"></div>
+      <div>
+        <router-outlet></router-outlet>
+        <!-- Contenido principal de la página -->
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </ng-container>
 
 <div *ngIf="isLoading" class="wrapper center">
   <mat-spinner class="menuSpinner"></mat-spinner>
 </div>
-

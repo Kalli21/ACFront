@@ -3,6 +3,7 @@ import { IClasStats } from '../../interfaces/clasModel/IClasStats';
 import { IProducto } from '../../interfaces/predic_sentiment/IProducto';
 import { GrafProductoService } from '../../services/dataInfo/graf-producto.service';
 import { IBarInfo } from '../../interfaces/infoGraf/IBarInfo';
+import { ProductoService } from '../../services/predict_sentiment/producto.service';
 
 @Component({
   selector: 'app-producto',
@@ -37,7 +38,8 @@ export class ProductoComponent {
   dataWordCloud: any = [];
   dataComentarios: any = [];
 
-  constructor(private grafProductoService: GrafProductoService) {
+  constructor(private grafProductoService: GrafProductoService,
+    private productoService: ProductoService) {
 
 
   }
@@ -62,7 +64,7 @@ export class ProductoComponent {
   }
 
   onInfoProducto(infoProducto: IProducto) {
-    this.infoProducto = infoProducto
+    this.productoService.getProducto(infoProducto.id).subscribe( (d:any) => this.infoProducto = d.result );    
   }
 
 }

@@ -9,6 +9,7 @@ export interface IDataCSV {
     NombreCliente?: string;
     Comentario?: string;
     Fecha?: string ;
+    Imagen?: string;
   }
   
   

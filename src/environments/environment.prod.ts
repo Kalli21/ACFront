@@ -1,6 +1,6 @@
 export const environment = {
   apiBackUrl: 'https://localhost:7015',
-  apiClasModelUrl:'http://127.0.0.1:8000',
-  apiTopicModelUrl:'http://127.0.0.1:8888',
+  apiClasModelUrl:'http://54.159.145.93',
+  apiTopicModelUrl:'http://54.209.70.76',
   production: true
 };

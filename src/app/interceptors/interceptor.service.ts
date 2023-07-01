@@ -28,6 +28,10 @@ export class InterceptorService implements HttpInterceptor{
   manejarError(error:HttpErrorResponse){
     console.log('sucedio un error');
     console.log(error);
+    if (error.error && error.error.displayMessage === 'Usuario no existe') {
+      // Mostrar alerta en pantalla con el mensaje de error
+      alert(error.error.displayMessage);
+    }
     return throwError(()=>new Error('Error personalizado'));
   }
 }

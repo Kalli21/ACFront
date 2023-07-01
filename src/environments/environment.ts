@@ -4,8 +4,10 @@
 
 export const environment = {
   apiBackUrl: 'https://localhost:7015',
-  apiClasModelUrl:'http://127.0.0.1:8000',
-  apiTopicModelUrl:'http://127.0.0.1:8888',
+  // apiClasModelUrl:'http://127.0.0.1:8000',
+  apiClasModelUrl:'http://54.161.206.76',
+  // apiTopicModelUrl:'http://127.0.0.1:8888',
+  apiTopicModelUrl:'http://54.197.70.55',
   production: false
 };
 

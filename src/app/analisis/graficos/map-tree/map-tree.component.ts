@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ScaleType } from '@swimlane/ngx-charts';
 
 @Component({
@@ -6,7 +6,7 @@ import { ScaleType } from '@swimlane/ngx-charts';
   templateUrl: './map-tree.component.html',
   styleUrls: ['./map-tree.component.css']
 })
-export class MapTreeComponent implements OnInit {
+export class MapTreeComponent implements OnChanges {
 
   @Input() dataTreeMap:any = [];
 
@@ -33,10 +33,9 @@ export class MapTreeComponent implements OnInit {
 
   constructor() {
   }
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     this.rankPos();
   }
-
   onSelect(event: any) {
   }
 

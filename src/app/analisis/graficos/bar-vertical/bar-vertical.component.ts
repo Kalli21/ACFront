@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ScaleType } from '@swimlane/ngx-charts';
 
 @Component({
@@ -6,16 +6,15 @@ import { ScaleType } from '@swimlane/ngx-charts';
   templateUrl: './bar-vertical.component.html',
   styleUrls: ['./bar-vertical.component.css']
 })
-export class BarVerticalComponent implements OnInit{
+export class BarVerticalComponent implements OnChanges{
 
   @Input() dataBarFecha: any = []
+  @Input() yLabel:string = '';
+  @Input() xLabel:string = '';
+  @Input() titulo:string = '';
 
   multi:any = [  ];
 
-  items = [{
-    "text": "hola",
-    "color": "black"
-  }]
 
   view: [number, number] = [1200, 400];
 
@@ -25,9 +24,9 @@ export class BarVerticalComponent implements OnInit{
   gradient: boolean = false;
   showLegend: boolean = false;
   showXAxisLabel: boolean = true;
-  xAxisLabel: string = 'Fecha';
+  xAxisLabel: string = this.yLabel;
   showYAxisLabel: boolean = true;
-  yAxisLabel: string = 'Cantidad';
+  yAxisLabel: string = this.xLabel;
   animations: boolean = true;
 
   colorScheme = {
@@ -39,10 +38,12 @@ export class BarVerticalComponent implements OnInit{
   constructor() {
 
   }
-  ngOnInit(): void {
-    this.multi = []
-    this.iterateData();
-   
+
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // this.multi = []
+    // this.iterateData();
+    Object.assign(this, { multi: this.dataBarFecha });
   }
 
   onSelect(event: any) {

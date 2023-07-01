@@ -14,7 +14,7 @@ export class TablaComentariosComponent implements OnChanges {
   titulo = "Comentarios Recientes";
   displayedColumns: string[] = ['text', 'categoria', 'probabilidades']; // Aquí debes especificar las columnas de tu tabla
   dataSource: MatTableDataSource<any> | null = null;
-  pageSizeOptions: number[] = [5];
+  pageSizeOptions: number[] = [5, 10, 30 ];
   pageSize = 5;
   pageIndex = 0;
   length = 0;
@@ -28,6 +28,7 @@ export class TablaComentariosComponent implements OnChanges {
       this.dataSource = new MatTableDataSource(this.comentarios);
       this.length = this.comentarios.length;
       this.pageIndex = 0;
+      this.pageSize = 5;
     }
   }
 

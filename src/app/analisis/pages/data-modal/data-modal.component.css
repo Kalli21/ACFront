@@ -1,8 +1,15 @@
-.titulocolor{
+.titulocolor {
     color: #D0BCFF;
     text-align: center;
 }
 
-.parrafocolor{
+.parrafocolor {
     color: white;
+}
+
+.modalCargarData {
+    min-height: 200px;
+    min-width: 900px;
+    margin-top: 20px;
+    border-radius: 20px;
 }

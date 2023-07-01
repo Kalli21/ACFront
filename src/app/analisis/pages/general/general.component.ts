@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { GrafGeneralService } from '../../services/dataInfo/graf-general.service';
-import { IComentariosFiltros } from '../../interfaces/predic_sentiment/Request/IComentariosFiltros';
-import { SentimentPredictService } from '../../services/clasModel/sentiment-predict.service';
 import { IClasStats } from '../../interfaces/clasModel/IClasStats';
+import { IBarInfo } from '../../interfaces/infoGraf/IBarInfo';
+import { ICategoria } from '../../interfaces/predic_sentiment/ICategoria';
 
 
 @Component({
@@ -13,33 +13,69 @@ import { IClasStats } from '../../interfaces/clasModel/IClasStats';
 export class GeneralComponent implements OnInit {
 
   userName=''
-  data : IClasStats = {
+  infoCirculo : IClasStats = {
     net: 0,
     pos: 0,
     neg: 0,
     total: 0
   };
+  
+  tituloBarVertical = "Setimiento por Mes";
+  dataBarVertical: IBarInfo[] = [];
+  
+  tituloBarHorizontal = "Setimiento por Categoria";
+  dataBarHorizontal: IBarInfo[] = [];
 
-  dataCategoria: any = []
   dataTreeMap: any = []
-  dataBarFecha: any = []
   dataWordCloud: any = []
 
-  constructor(private grafGeneralService:GrafGeneralService,
-    private sentimentPredictService:SentimentPredictService) {
-
-
+  constructor(private grafGeneralService:GrafGeneralService) {
   }
-  ngOnInit() {
-    const filtro :IComentariosFiltros = {
 
-    }
-      
-    this.data =  this.grafGeneralService.infoCirculo;
-    this.dataCategoria = this.grafGeneralService.infoBarHorizontal;
-    this.dataTreeMap = this.grafGeneralService.infoMapTreeTopPos;
-    this.dataBarFecha=this.grafGeneralService.infoBarFechaCom;
-    this.dataWordCloud = this.grafGeneralService.infoWordCloud;
+
+  ngOnInit() {
+    this.grafGeneralService.infoCirculo$.subscribe((data: IClasStats) => {
+      this.infoCirculo = data;
+    });
+    this.grafGeneralService.dataMapTreeTop$.subscribe((data: any[] ) => {      
+      this.dataTreeMap = data;
+    });
+    this.grafGeneralService.dataBarHorizontal$.subscribe((data: any[] ) => {
+      this.dataBarHorizontal = procesarDataHorizontal(data);
+       
+    });
+    this.grafGeneralService.dataWordCloud$.subscribe((data: any[] ) => {
+      this.dataWordCloud = data;
+    });
+    this.grafGeneralService.dataBarVertical$.subscribe((data: IBarInfo[] ) => {
+      this.dataBarVertical = data;
+    });
+    
   }
 
 }
+function procesarDataHorizontal(data: ICategoria[]): IBarInfo[] {
+  let resp: IBarInfo[] = [];
+  data.forEach((cat:any) => {
+    const item = {
+      "name": cat.nombre,
+      "series": [
+        {
+          "name": "Negativo",
+          "value": cat.stats.neg
+        },
+        {
+          "name": "Neutro",
+          "value": cat.stats.net
+        },
+        {
+          "name": "Positivo",
+          "value": cat.stats.pos
+        }
+      ]
+    }
+    resp.push(item)
+  });
+  return resp;
+}
+

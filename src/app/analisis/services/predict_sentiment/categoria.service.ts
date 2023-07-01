@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ICategoria } from '../../interfaces/predic_sentiment/ICategoria';
+import { ICategoriasFiltros } from '../../interfaces/predic_sentiment/Request/ICategoriasFiltros';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +13,8 @@ export class CategoriaService {
 
   constructor(private http: HttpClient) { }
 
-  getCategorias() {
-
-    return this.http.get(this.baserUrl);
+  getCategorias(username:string) {
+    return this.http.get(this.baserUrl + 'username/' + username);
   }
 
   getCategoriabyname(username:string,name: string) {
@@ -42,9 +42,9 @@ export class CategoriaService {
     return this.http.delete(this.baserUrl + id);
   }
 
-  getCategoriasConComentarios(username: string){
+  getCategoriasConComentariosConFiltros(username: string, filtros: ICategoriasFiltros){
     
-    return this.http.get(this.baserUrl + 'username/coment/'+username);
+    return this.http.post(this.baserUrl + 'username/coment/'+username,filtros);
   }
 
 }

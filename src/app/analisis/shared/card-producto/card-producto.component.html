@@ -5,9 +5,7 @@
         <h1>{{ infoProducto.nombre ? infoProducto.nombre : 'Producto' }}</h1>
         <div class="prodImgContainer">
           <div class="prodImg">
-            <img
-              src="https://definicion.de/wp-content/uploads/2009/06/producto.png"
-            />
+            <img [src]="infoProducto.urlImg ? infoProducto.urlImg : 'https://definicion.de/wp-content/uploads/2009/06/producto.png'" />
           </div>
         </div>
 
@@ -17,9 +15,9 @@
               <mat-icon>star</mat-icon>
             </div>
             <div class="col-4" style="margin-top: 20px">
-              <h2>5</h2>
+              <!-- <h2>5</h2>
               <p>de 1000</p>
-              <p>Ranking</p>
+              <p>Ranking</p> -->
             </div>
           </div>
         </div>

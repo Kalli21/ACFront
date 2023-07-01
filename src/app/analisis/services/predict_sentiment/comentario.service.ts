@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { IComentario } from '../../interfaces/predic_sentiment/IComentario';
@@ -40,5 +40,12 @@ export class ComentarioService {
 
   getComentariosConFiltros(username: string, filtro : IComentariosFiltros){
     return this.http.post(this.baserUrl + 'username/' + username, filtro);
+  }
+
+  getComentariosConPaginacion(username: string,page: number, pageSize: number){
+    let params = new HttpParams();
+    params = params.set('page', page.toString());
+    params = params.set('pageSize', pageSize.toString());
+    return this.http.get(this.baserUrl + 'username/pagina/' + username, { params });
   }
 }

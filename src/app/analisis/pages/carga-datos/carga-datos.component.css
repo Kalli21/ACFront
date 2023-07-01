@@ -1,4 +1,8 @@
 .pagination-container:empty {
     display:none
   }
-  
+.cardTablaPrincipal{
+  margin-top: 40px;
+  border-radius: 5px;
+  background-color: #141218;
+}

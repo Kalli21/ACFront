@@ -34,12 +34,12 @@ export class DataModalComponent {
 
   private procesarArchivo(csvData: string){
     const list = csvData.split('\n');
-    const listKey = list[0].trim().split(';');
+    const listKey = list[0].trim().split('|');
     list.forEach((e, index) => {
       if (index === 0 || e.length===0) {
         return; // Omitir la primera iteración
       }
-      const item = e.split(';')
+      const item = e.split('|')
       const objeto: IDataCSV = {};
       item.forEach((elemento, index) => {
           objeto[listKey[index]] = elemento.trim();   
