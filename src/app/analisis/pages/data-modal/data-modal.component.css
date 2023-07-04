@@ -10,6 +10,10 @@
 .modalCargarData {
     min-height: 200px;
     min-width: 900px;
+    max-height: 80vh;
     margin-top: 20px;
     border-radius: 20px;
+}
+.tablaModal{
+    
 }

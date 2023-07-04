@@ -5,6 +5,7 @@ import { ICategoriasFiltros } from 'src/app/analisis/interfaces/predic_sentiment
 import { CategoriaService } from '../../../services/predict_sentiment/categoria.service';
 import { ICategoria } from '../../../interfaces/predic_sentiment/ICategoria';
 import { tap } from 'rxjs';
+import { DescargaPDFService } from '../../../services/dataInfo/descarga-pdf.service';
 
 @Component({
   selector: 'app-filtros-pagina-general',
@@ -34,7 +35,12 @@ export class FiltrosPaginaGeneralComponent {
   selecCategoria?: ICategoria;
 
   constructor(public grafGeneralService: GrafGeneralService,
-    private categoriaService: CategoriaService) {}
+    private categoriaService: CategoriaService,
+    private descargaPDFService: DescargaPDFService) {}
+  
+  requestDownloadGeneral() {
+    this.descargaPDFService.requestDownloadGeneral();
+  }
 
   ngOnInit() {
     // Restaurar valores guardados en localStorage

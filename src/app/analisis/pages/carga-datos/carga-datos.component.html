@@ -1,3 +1,5 @@
+
+<app-tol-tips></app-tol-tips>
 <div class="container">
   <div class="row align-items-center">
     <div class="col align-self-center" style="text-align: center;">
@@ -11,14 +13,11 @@
           [disabled]="analisisSentimento || analisisTemas">Ejecutar Análisis</button>
         </div>
       </div>      
-      <div class="col" style="margin-top: 30px;" *ngIf="!cargaParcial || analisisSentimento || analisisTemas">
+      <div class="col" style="margin-top: 30px;" *ngIf=" subiendoDatos || analisisSentimento || analisisTemas">
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
       </div>
     </div>
-
   </div>
-  
-
   <mat-card class="cardTablaPrincipal">
     <div class="container">
       <div class="row align-items-center">

@@ -48,4 +48,8 @@ export class ComentarioService {
     params = params.set('pageSize', pageSize.toString());
     return this.http.get(this.baserUrl + 'username/pagina/' + username, { params });
   }
+
+  getCantComentarios(username: string){
+    return this.http.post( this.baserUrl + 'username/cant/' + username,null);
+  }
 }

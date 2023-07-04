@@ -77,3 +77,7 @@ mat-list-item:focus {
   background-color: #151342;
   border-radius: 20px;
 }
+
+.flex-container {
+  margin-left: auto;
+}

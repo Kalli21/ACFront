@@ -24,7 +24,9 @@
     "@swimlane/ngx-charts": "^20.3.1",
     "angular-tag-cloud-module": "^14.0.0",
     "bootstrap": "^5.3.0",
+    "html2canvas": "^1.4.1",
     "jquery": "^3.7.0",
+    "jspdf": "^2.5.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

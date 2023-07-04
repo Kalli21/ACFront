@@ -71,10 +71,7 @@ export class GrafGeneralService {
                 .getTemasByComentarios(this.userName, res.comentariosIds, 4, [])
                 .subscribe((respTopic: any) => {
                   this.dataWordCloudSubject.next(respTopic.temas);
-
                   this.obtenerDataBarFecha(respTopic.comentariosId);
-
-                  this.cargando = false;
                 });
             });
         });

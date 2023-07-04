@@ -1,6 +1,6 @@
 <div class="cardFiltros">
   <div class="row align-items-center justify-content-evenly">
-    <div class="col-3 datecol">
+    <div class="col-4 datecol">
       <div class="row align-items-center justify-content-evenly">
         <div class="col">
           <mat-form-field class="example-form-field">
@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <div class="col-6 datecol">
+    <div class="col-8 datecol">
       <div class="row align-items-center justify-content-evenly">
         <div class="col-5 datecol">
           <mat-form-field class="example-form-field">
@@ -72,6 +72,10 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+        </div>
+        <div class="col-1 align-self-center ">          
+          <button class="iconDescarga datecol" mat-button (click)="requestDownloadGeneral()">
+            <mat-icon style="height: 50px; width: 50px;font-size: xx-large;">save_alt</mat-icon></button>
         </div>
       </div>
     </div>

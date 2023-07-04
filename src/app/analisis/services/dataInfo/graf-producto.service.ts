@@ -77,7 +77,6 @@ export class GrafProductoService {
                   const comnetsIds = respModelIA.comentarios.map(
                     (objeto: any) => objeto.id
                   );
-                  console.log("IDS PRIMER FILTRO 'filtroSentimiento': ", comnetsIds)
                   this.obtenerDataBarFecha(comnetsIds);
                 });
             });

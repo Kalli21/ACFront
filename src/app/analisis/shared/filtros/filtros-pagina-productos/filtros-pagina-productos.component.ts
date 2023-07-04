@@ -9,6 +9,7 @@ import { IProductosFiltros } from '../../../interfaces/predic_sentiment/Request/
 import { GrafProductoService } from '../../../services/dataInfo/graf-producto.service';
 import { IComentariosFiltros } from '../../../interfaces/predic_sentiment/Request/IComentariosFiltros';
 import { TopicModelingService } from '../../../services/topicModel/topic-modeling.service';
+import { DescargaPDFService } from 'src/app/analisis/services/dataInfo/descarga-pdf.service';
 
 @Component({
   selector: 'app-filtros-pagina-productos',
@@ -43,10 +44,13 @@ export class FiltrosPaginaProductosComponent {
     constructor(private router: Router,
       private productoService:ProductoService,
       public grafProductoService: GrafProductoService,
-      private topicModelingService: TopicModelingService) {
-      
-    }
+      private topicModelingService: TopicModelingService,
+      private descargaPDFService: DescargaPDFService) {}
   
+    requestDownloadProducto() {
+      this.descargaPDFService.requestDownloadproducto();
+    }
+    
     isPageProduct(): boolean {
       return this.router.url.startsWith('/analisis/producto');
     }

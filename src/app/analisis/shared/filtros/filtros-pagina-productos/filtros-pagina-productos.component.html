@@ -93,13 +93,15 @@
                 <mat-option *ngFor="let tema of listaTemas let i = index " [value]="i">{{ tema }}</mat-option>
               </mat-select>
             </mat-form-field>
-            
-            
+          </div>
+          <div class="col-1 align-self-center ">          
+            <button class="iconDescarga datecol" mat-button (click)="requestDownloadProducto()">
+              <mat-icon style="height: 50px; width: 50px;font-size: xx-large;">save_alt</mat-icon></button>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="col" style="margin-top: 30px;" *ngIf="grafProductoService.cargando">
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  </div>
+</div>
+<div class="col" style="margin-top: 30px;" *ngIf="grafProductoService.cargando">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>

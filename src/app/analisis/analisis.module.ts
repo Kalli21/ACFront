@@ -37,6 +37,8 @@ import { TablaComentariosComponent } from './graficos/tabla-comentarios/tabla-co
 import { FiltrosPaginaProductosComponent } from './shared/filtros/filtros-pagina-productos/filtros-pagina-productos.component';
 import { FiltrosPaginaGeneralComponent } from './shared/filtros/filtros-pagina-general/filtros-pagina-general.component';
 import {  MatProgressBarModule } from '@angular/material/progress-bar';
+import { TolTipsComponent } from './shared/tol-tips/tol-tips.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,7 @@ import {  MatProgressBarModule } from '@angular/material/progress-bar';
     TablaComentariosComponent,
     FiltrosPaginaProductosComponent,
     FiltrosPaginaGeneralComponent,
+    TolTipsComponent,
   ],
   imports: [
     CommonModule,
@@ -78,7 +81,8 @@ import {  MatProgressBarModule } from '@angular/material/progress-bar';
     MatToolbarModule,
     MatAutocompleteModule,
     MatInputModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatTooltipModule
   ],
 })
 export class AnalisisModule {}

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { UsuarioService } from './auth/services/predict_sentiment/usuario.service';
 
 const routes: Routes = [
   {
@@ -8,7 +9,8 @@ const routes: Routes = [
   },
   {
     path: 'analisis',
-    loadChildren: () => import('./analisis/analisis.module').then( m => m.AnalisisModule )
+    loadChildren: () => import('./analisis/analisis.module').then( m => m.AnalisisModule ), 
+    canActivate: [UsuarioService]
   },
   {
     path: '**',

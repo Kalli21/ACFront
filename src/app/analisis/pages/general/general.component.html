@@ -1,4 +1,4 @@
-<div class="container">
+<div #content class="container">
   <div class="row align-items-center">
     <div class="col">
       <app-filtros-pagina-general></app-filtros-pagina-general>
@@ -12,7 +12,6 @@
       <app-map-tree [dataTreeMap]="dataTreeMap"></app-map-tree>
     </div>
     <div class="col-3">
-      <!-- <app-bar-horizontal [dataCategoria]="dataCategoria"></app-bar-horizontal> -->
       <app-bar-horizontal-v2
               [dataBarHorizontal]="dataBarHorizontal"
               [titulo]="tituloBarHorizontal"

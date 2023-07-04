@@ -28,4 +28,8 @@
   .datecol {
     text-align: center;
   }
-  
+  .iconDescarga{
+    border-radius: 20px;
+    height: 60px;
+    background-color: #141218;
+  }

@@ -1,0 +1,48 @@
+<div class="contTolTip" [ngClass]="{ collapsed: isCollapsed }">
+  <div class="row">
+    <div class="col-4">
+      <div class="card-container">
+        <mat-card class="cardToolTip" *ngIf="!isCollapsed">
+          <h3>Formato de Archivo</h3>
+          <p>
+            Recuerda que debes subir un archivo con la extencion CSV. Ejemplo
+            “archivo.csv”
+          </p>
+        </mat-card>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card-container">
+        <mat-card class="cardToolTip" *ngIf="!isCollapsed">
+          <h3>Columnas Requeridas</h3>
+          <p>Puedes ver las columans requeridas en la plantilla</p>
+          <div class="row align-items-center justify-content-evenly">
+            <div class="col-4">
+              <a href="assets\plantilla\Plantilla_AC.csv" download>
+                <button mat-button color="primary">Plantilla</button>
+              </a>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card-container">
+        <mat-card class="cardToolTip" *ngIf="!isCollapsed">
+          <h3>Separadores de Columnas</h3>
+          <p>Asegurese de que los separadores de las columnas sea “|”</p>
+          <div class="row align-items-center justify-content-evenly">            
+            <div class="col-4">
+              <a href="assets/plantilla/DataBooks_AC_Ejemplo.csv" download>
+                <button mat-button color="primary">Ejemplo</button>
+              </a>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  <button class="expand-button" (click)="toggleCard()">
+    <span class="icon">{{ isCollapsed ? "▼" : "▲" }}</span>
+  </button>
+</div>

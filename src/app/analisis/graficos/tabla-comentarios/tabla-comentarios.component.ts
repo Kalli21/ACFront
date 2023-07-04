@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -18,17 +18,22 @@ export class TablaComentariosComponent implements OnChanges {
   pageSize = 5;
   pageIndex = 0;
   length = 0;
-  // cantData = 0;
-  // cantDataPros = 0;
-  // cantDataTopic = 0;
-  // numTemas = 20;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  
+  ngAfterViewInit() {
+    if(this.dataSource){
+      this.dataSource.paginator = this.paginator;
+    }
+    
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["comentarios"] && this.comentarios) {
       this.dataSource = new MatTableDataSource(this.comentarios);
       this.length = this.comentarios.length;
-      this.pageIndex = 0;
-      this.pageSize = 5;
+      this.paginator.pageIndex = this.pageIndex;
+      this.paginator.length = this.length;
+      this.dataSource.paginator = this.paginator;
     }
   }
 

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { UsuarioService } from '../../../auth/services/predict_sentiment/usuario.service';
 
 
 
@@ -8,11 +9,12 @@ import { NavigationEnd, NavigationStart, Router } from '@angular/router';
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css']
 })
-export class MenuComponent {
+export class MenuComponent{
   isMenuFixed = false;
   isLoading = true;
   userName = localStorage.getItem('userName') || '';
-  constructor(private router: Router) {
+  constructor(private router: Router,
+    private usuarioService: UsuarioService) {
     router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
         this.isLoading = true;
@@ -20,12 +22,19 @@ export class MenuComponent {
         this.isLoading = false;
       }
     });
+    this.userName = localStorage.getItem('userName') || '';
    }
+
 
   shouldShowMenu(): boolean {
     return !this.router.url.startsWith('/auth');
   }
   toggleMenu() {
     this.isMenuFixed = !this.isMenuFixed;
-  }  
+    this.userName = localStorage.getItem('userName') || '';
+  }
+  
+  onLogout(){
+    this.usuarioService.logout();
+  }
 }

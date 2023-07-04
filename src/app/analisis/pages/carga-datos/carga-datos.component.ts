@@ -36,14 +36,23 @@ export class CargaDatosComponent implements OnInit {
   cantDataPros = 0;
   cantDataTopic = 0;
   numTemas = 20;
-
+  
+  subiendoDatos = false;
   cargaParcial = false;
   analisisSentimento = false;
   analisisTemas = false;
+  
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   isBackButtonDisabled = true;
   userName = localStorage.getItem('userName') || '';
+  
+  ngAfterViewInit() {
+    if(this.dataSource){
+      this.dataSource.paginator = this.paginator;
+    }
+    
+  }
 
   constructor(private dialog: MatDialog,
     private cartegoriaServices: CategoriaService,
@@ -52,14 +61,19 @@ export class CargaDatosComponent implements OnInit {
     private productoServices: ProductoService,
     private modelPredicSetimentServices: SentimentPredictService,
     private topiModelingServices: TopicModelingService) { }
+
   ngOnInit(): void {
-    this.getData();
+    this.comentarioServices.getCantComentarios(this.userName).subscribe( (d:any) => {
+      this.length = d.result
+      this.getData();
+    });
+    
   }
   getData(): void {
     this.comentarioServices.getComentariosConPaginacion(this.userName,this.pageIndex + 1, this.pageSize).subscribe( (response: any) => {
       this.dataSource = new MatTableDataSource(response.result);
-      this.dataSource.paginator = this.paginator;
-      this.length = response.result.length + 1;
+      this.paginator.pageIndex = this.pageIndex;
+      this.paginator.length = this.length;
       if (this.dataSource) {
         this.cargaParcial = true;
       }
@@ -101,6 +115,7 @@ export class CargaDatosComponent implements OnInit {
       userid = obj.id;
     }
     this.cargaParcial = false;
+    this.subiendoDatos = false;
     if (userName) {
       this.cantData = data.length;
       of(...data).pipe(
@@ -272,6 +287,7 @@ export class CargaDatosComponent implements OnInit {
       if( this.cantData*0.9 <= this.cantDataPros && this.cantData*0.9 <= this.cantDataTopic ){
         this.getData();   
         this.cargaParcial = true;
+        this.subiendoDatos = true;
       }
         
     });
