@@ -15,6 +15,14 @@ const routes: Routes = [
   {
     path: '**',
     redirectTo: 'auth'
+  },
+  {
+    path: '*',
+    redirectTo: 'auth'
+  },
+  {
+    path: '',
+    redirectTo: 'auth'
   }
 ];
 
