@@ -11,9 +11,9 @@ const routes: Routes = [
       { path: 'cargadatos', component: CargaDatosComponent },
       { path: 'general', component: GeneralComponent },
       { path: 'producto', component: ProductoComponent },
-      { path: '**', redirectTo: 'cargadatos' },
-      { path: '*', redirectTo: 'cargadatos' },
-      { path: '', redirectTo: 'cargadatos' }
+      { path: '**', redirectTo: 'cargadatos', pathMatch: 'full' },
+      { path: '*', redirectTo: 'cargadatos', pathMatch: 'full' },
+      { path: '', redirectTo: 'cargadatos', pathMatch: 'full' }
     ]
   }
 ];
