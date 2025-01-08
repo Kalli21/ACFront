@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { UsuarioService } from '../../../auth/services/predict_sentiment/usuario.service';
 
-
-
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -13,6 +11,8 @@ export class MenuComponent{
   isMenuFixed = false;
   isLoading = true;
   userName = localStorage.getItem('userName') || '';
+  msgEstado = '';
+
   constructor(private router: Router,
     private usuarioService: UsuarioService) {
     router.events.subscribe((event) => {
@@ -23,6 +23,9 @@ export class MenuComponent{
       }
     });
     this.userName = localStorage.getItem('userName') || '';
+    this.usuarioService.msgEstado$.subscribe((data: any) => {
+      this.msgEstado = data;
+    });
    }
 
 
@@ -35,6 +38,7 @@ export class MenuComponent{
   }
   
   onLogout(){
-    this.usuarioService.logout();
+    this.usuarioService.logout()
   }
+
 }

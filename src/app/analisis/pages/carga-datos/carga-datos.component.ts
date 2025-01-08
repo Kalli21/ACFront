@@ -1,24 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DataModalComponent } from '../data-modal/data-modal.component';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { IDataCSV } from '../../interfaces/predic_sentiment/IDataCSV';
-import { CategoriaService } from '../../services/predict_sentiment/categoria.service';
-import { ClienteService } from '../../services/predict_sentiment/cliente.service';
-import { ComentarioService } from '../../services/predict_sentiment/comentario.service';
-import { ProductoService } from '../../services/predict_sentiment/producto.service';
-import { ICategoria } from '../../interfaces/predic_sentiment/ICategoria';
-import { IProducto } from '../../interfaces/predic_sentiment/IProducto';
-import { ICliente } from '../../interfaces/predic_sentiment/ICliente';
-import { IComentario } from '../../interfaces/predic_sentiment/IComentario';
-import { concatMap, map, retry, tap, toArray } from 'rxjs/operators';
-import { Observable, of, forkJoin } from 'rxjs';
-import { SentimentPredictService } from '../../services/clasModel/sentiment-predict.service';
-import { IClasModelCom } from '../../interfaces/clasModel/IClasModel';
-import { TopicModelingService } from '../../services/topicModel/topic-modeling.service';
-import { ITopicModel } from '../../interfaces/topicModel/ITopicModel';
-
+import { MatPaginator } from '@angular/material/paginator';
+import { WebapiService } from '../../services/webapi/webapi.service';
+import { InfoGenerada } from '../../interfaces/webApi/IInfoGenerada';
+import { TipoInfo } from '../../interfaces/webApi/IInfoGenerada';
+import { IInfoFiltro } from '../../interfaces/webApi/Request/IInfoFiltro'
+import { UsuarioService } from '../../../auth/services/predict_sentiment/usuario.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-carga-datos',
@@ -26,7 +16,7 @@ import { ITopicModel } from '../../interfaces/topicModel/ITopicModel';
   styleUrls: ['./carga-datos.component.css']
 })
 export class CargaDatosComponent implements OnInit {
-  displayedColumns: string[] = ['id','contenido','fecha','productoId','clienteId']; // Aquí debes especificar las columnas de tu tabla
+  displayedColumns: string[] = ['correlativo','contenido','fecha','producto','cliente','sentimiento','probabilidad']; // Aquí debes especificar las columnas de tu tabla
   dataSource: MatTableDataSource<any> | null = null;
   pageSizeOptions: number[] = [5, 10, 30 ];
   pageSize = 5;
@@ -39,14 +29,36 @@ export class CargaDatosComponent implements OnInit {
   
   subiendoDatos = false;
   cargaParcial = false;
-  analisisSentimento = false;
-  analisisTemas = false;
   
+  analisisDisponible = true;
+  predic_all = false;  
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   isBackButtonDisabled = true;
-  userName = localStorage.getItem('userName') || '';
-  
+  userName = localStorage.getItem('userName') || '';  
+
+  filtroInfo: IInfoFiltro = {
+    CT_filtro_com : {
+      categoriasId: [],
+      listId: []
+    },      
+    PS_filtros_com : {
+      pageNumber: this.pageIndex + 1,
+      pageSize: this.pageSize,
+      totalPages: undefined,
+      totalItems: 0,
+      paginacion: true,
+      userName : this.userName,
+    },
+    DT_filtros_com : {
+      temasId: [],
+      listId: [],
+      min_info: false
+    },
+    cant_ranking : 10,
+    get_comentarios: true
+  }
+
   ngAfterViewInit() {
     if(this.dataSource){
       this.dataSource.paginator = this.paginator;
@@ -55,29 +67,28 @@ export class CargaDatosComponent implements OnInit {
   }
 
   constructor(private dialog: MatDialog,
-    private cartegoriaServices: CategoriaService,
-    private clienteServices: ClienteService,
-    private comentarioServices: ComentarioService,
-    private productoServices: ProductoService,
-    private modelPredicSetimentServices: SentimentPredictService,
-    private topiModelingServices: TopicModelingService) { }
+    private webapiService: WebapiService,
+    private usuarioService: UsuarioService,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-    this.comentarioServices.getCantComentarios(this.userName).subscribe( (d:any) => {
-      this.length = d.result
-      this.getData();
-    });
+    
+    this.cargaParcial = false;
+    this.set_estados();
+    this.getData();
     
   }
   getData(): void {
-    this.comentarioServices.getComentariosConPaginacion(this.userName,this.pageIndex + 1, this.pageSize).subscribe( (response: any) => {
-      this.dataSource = new MatTableDataSource(response.result);
+    this.userName = localStorage.getItem('userName') || '';
+    this.filtroInfo.PS_filtros_com.pageNumber = this.pageIndex + 1;  
+    this.filtroInfo.PS_filtros_com.pageSize = this.pageSize;
+    this.webapiService.getComentarios(this.userName, this.filtroInfo).subscribe((resp:any) => {
+      this.dataSource = new MatTableDataSource(resp.result);
       this.paginator.pageIndex = this.pageIndex;
-      this.paginator.length = this.length;
+      this.paginator.length = resp.filtroInfo.totalItems;
       if (this.dataSource) {
         this.cargaParcial = true;
       }
-      // Actualizar otras propiedades si es necesario
     });
   }
 
@@ -97,218 +108,99 @@ export class CargaDatosComponent implements OnInit {
   openCsvModal(): void {
     const dialogRef = this.dialog.open(DataModalComponent);
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result.length > 0) {
-        this.guardarDatos(result);
+    dialogRef.afterClosed().subscribe((resp: any) => {
+      this.procesarArchivo(resp['resp'], resp['clear_data']);
+    });
+  }
+
+  set_estados(){
+    this.userName = localStorage.getItem('userName') || '';
+    this.webapiService.getInfo(this.userName, TipoInfo.Estados)
+    .subscribe((user_stats: InfoGenerada) => {
+      if (user_stats.stats_ct.estado == 1){
+        this.analisisDisponible = false;
+      }else{
+        this.analisisDisponible = true;
       }
-    });
-  }
-
-
-
-  guardarDatos(data: IDataCSV[]) {
-    const userName = localStorage.getItem('userName');
-    const objUser = localStorage.getItem('userInfo');
-    let userid = 0;
-    if (objUser) {
-      const obj = JSON.parse(objUser);
-      userid = obj.id;
-    }
-    this.cargaParcial = false;
-    this.subiendoDatos = false;
-    if (userName) {
-      this.cantData = data.length;
-      of(...data).pipe(
-        concatMap((e: IDataCSV) => {
-          return this.crearCategoria(e, userName).pipe(
-            concatMap((datcategoria: ICategoria) => {
-              return this.crearProducto(e, userid).pipe(
-                concatMap((datproducto: IProducto) => {
-                  const prod = datproducto;
-                  return this.actualizarProducto(prod, datcategoria).pipe(
-                    concatMap(() => {
-                      return this.crearCliente(e, userName).pipe(
-                        concatMap((datcliente: ICliente) => {
-                          const cli = datcliente;
-                          return this.crearComentario(e, userName, datcliente, datproducto).pipe(
-                            map((com: IComentario) => {
-                              this.subirComentarioModelPredict(userName, com);
-                              return { categoria: datcategoria, producto: prod, cliente: cli, comentario: com };
-                            })
-                          );
-                        })
-                      );
-                    })
-                  );
-                })
-              );
-            })
-          );
-        }),
-        toArray(),
-        tap((resultados: any[]) => {
-          // console.log('Operaciones completadas:', resultados);
-        })
-      ).subscribe(() => {
-        // console.log('Todas las operaciones han sido completadas.');
-      });
-    }
-  }
-
-  crearCategoria(e: IDataCSV, userName: string): Observable<ICategoria> {
-    const cat: ICategoria = {
-      id: 0,
-      nombre: e.NombreCategoria || '',
-      productos: [],
-      userName: userName || ''
-    };
-
-    return this.cartegoriaServices.crearCategoria(cat).pipe(
-      map((data: any) => {
-        return data.result;
-      })
-    );
-  }
-
-  crearProducto(e: IDataCSV, userid: number): Observable<IProducto> {
-    const prod: IProducto = {
-      id: 0,
-      codProducto: e.CodProducto || '',
-      nombre: e.NombreProducto || '',
-      descripcion: e.DescripcionProducto || '',
-      precio: Number(e.PrecioProducto),
-      urlImg: e.Imagen || '',
-      usuarioId: userid,
-      categorias: [],
-      comentarios: []
-    };
-
-    return this.productoServices.crearProducto(prod).pipe(
-      map((data: any) => {
-        return data.result;
-      })
-    );
-  }
-
-  actualizarProducto(producto: IProducto, categoria: ICategoria): Observable<void> {
-    if (producto.categorias.some(p => p.nombre === categoria.nombre)) {
-      producto.categorias = [];
-    } else {
-      producto.categorias = [];
-      producto.categorias.push(categoria);
-    }
-    return this.productoServices.actualizarProducto(producto.id, producto).pipe(
-      map(() => { })
-    );
-  }
-
-  crearCliente(e: IDataCSV, userName: string): Observable<ICliente> {
-    const cli: ICliente = {
-      id: 0,
-      nombre: e.NombreCliente || '',
-      codCliente: e.CodCliente || '',
-      comentarios: [],
-      userName: userName
-    };
-
-    return this.clienteServices.crearCliente(cli).pipe(
-      map((data: any) => {
-        return data.result;
-      })
-    );
-  }
-
-  crearComentario(e: IDataCSV, userName: string, cli: ICliente, prod: IProducto): Observable<IComentario> {
-    const ff = e.Fecha;
-    const com: IComentario = {
-      id: 0,
-      contenido: e.Comentario || '',
-      fecha: this.trans_date(ff || ''),
-      productoId: prod.id,
-      clienteId: cli.id || 0,
-      userName: userName
-    };
-    return this.comentarioServices.crearComentario(com).pipe(
-      map((data: any) => {
-        return data.result;
-      })
-    );
-  }
-
-
-  private trans_date(fechaString: string) {
-    if (fechaString !== '') {
-      const partesFecha: string[] = fechaString.split("/");
-      const fecha: Date = new Date(Number(partesFecha[2]), Number(partesFecha[1]) - 1, Number(partesFecha[0]));
-      return fecha.toISOString();
-    }
-    return undefined;
-
-  }
-
-  subirComentarioModelPredict(userName: string, com: IComentario) {
-    const predicCom: IClasModelCom = {
-      id: com.id.toString(),
-      text: com.contenido,
-      probabilidades: [],
-      categoria: -1,
-      fecha: com.fecha || ''
-    }
-
-    this.modelPredicSetimentServices.subirComentario(userName, [predicCom])
-    .pipe(retry(3)) // Intentar 10 veces en caso de error
-    .subscribe(() => {
-      this.cantDataPros += 1;
-    });
-    
-    const topiCom: ITopicModel = {
-      id: com.id.toString(),
-      text: com.contenido,
-      temas: {},
-      fecha: com.fecha || ''
-    }
-
-    this.topiModelingServices.subirComentario(userName, [topiCom])
-    .pipe(retry(3)) // Intentar 10 veces en caso de error
-    .subscribe(() => {
-      this.cantDataTopic += 1;
-    });
-
-    // Aquí agregamos el código para realizar acciones después de todas las inserciones
-    const inserciones = []; // Array para almacenar todas las observables de las inserciones
-
-    // Agregar más llamadas a this.modelPredicSetimentServices.subirComentario si es necesario
-    inserciones.push(this.modelPredicSetimentServices.subirComentario(userName, [predicCom]));
-    inserciones.push(this.topiModelingServices.subirComentario(userName, [topiCom]));
-                                               
-
-    forkJoin(inserciones).subscribe(results => {
-
-      if( this.cantData*0.9 <= this.cantDataPros && this.cantData*0.9 <= this.cantDataTopic ){
-        this.getData();   
-        this.cargaParcial = true;
+      if (user_stats.stats_ps.estado == 2){
         this.subiendoDatos = true;
+      }else{
+        this.subiendoDatos = false;
       }
-        
-    });
-
+      this.usuarioService.getEstado(user_stats);
+    })
   }
-  
+
   ejecutarAnalisis(){
-    this.analisisSentimento = true;
-    this.analisisTemas = true;
-    this.modelPredicSetimentServices.ejecutarPrediccion(this.userName)
-    .pipe(retry(3))
-    .subscribe( d => {
-      this.analisisSentimento = false;
-     });
-    this.topiModelingServices.ejecutarTopicModeling(this.userName,this.numTemas)
-    .pipe(retry(3))
-    .subscribe( d => { 
-      this.analisisTemas = false;
-    });
-    
-  
+    this.userName = localStorage.getItem('userName') || '';
+    this.webapiService.getInfo(this.userName, TipoInfo.Estados)
+    .subscribe((user_stats: InfoGenerada) => {
+      if (user_stats.stats_ps.estado == 3 && user_stats.stats_ct.estado != 1 ) {
+        this.analisisDisponible = false;
+        this.usuarioService.getEstado(user_stats);
+        this.webapiService.ejecutarAnalisis(this.userName, this.numTemas, this.predic_all)
+        .subscribe(() => {
+          this.analisisDisponible = true;
+          this.usuarioService.clearEstado();
+          this.ngOnInit();
+        })
+      }
+    })    
   }
 
+  procesarArchivo(info_archivo: any, clean_data_user: boolean){
+    this.userName = localStorage.getItem('userName') || '';
+    this.webapiService.getInfo(this.userName, TipoInfo.Estados)
+    .subscribe((user_stats: InfoGenerada) => {
+      if (user_stats.stats_ps.estado != 2 ) {        
+        if (info_archivo &&  info_archivo.result ) {
+          let idArchivo = info_archivo.result.id;
+          // let clean_data_user = true;
+          this.analisisDisponible = false;
+          this.usuarioService.getEstado(user_stats);
+          this.webapiService.procesarArchivo(this.userName, idArchivo , clean_data_user).subscribe((resp: any) => {
+            this.analisisDisponible = true;
+            this.usuarioService.clearEstado();
+            this.showMessage(resp.displayMessage);            
+            this.ngOnInit();
+          });        
+        }
+      }
+    })    
+  }
+
+  capitalizeFirstLetter(column: string): string {
+    return column.charAt(0).toUpperCase() + column.slice(1);
+  }
+  
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.toLocaleString('default', { month: 'short' });
+    const year = date.getFullYear();
+    return `${day} - ${month} - ${year}`;
+  }
+
+  getIconClass(categoria: number): string {
+    if (categoria === 2){
+      return 'no-rotate';
+    }
+    if (categoria === 1){
+      return 'rotate-90';
+    }
+    if (categoria === 0){
+      return 'rotate-180';
+    }
+    return '';
+  }
+
+  showMessage(mng: string) {
+    this.snackBar.open(mng, '', {
+      duration: 7000, // 5 segundos
+      horizontalPosition: 'right',
+      verticalPosition: 'bottom',
+      panelClass: ['transparent-snackbar']
+    });
+  }
+  
 }

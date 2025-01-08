@@ -2,11 +2,9 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { GrafGeneralService } from '../../services/dataInfo/graf-general.service';
 import { IClasStats } from '../../interfaces/clasModel/IClasStats';
 import { IBarInfo } from '../../interfaces/infoGraf/IBarInfo';
-import { ICategoria } from '../../interfaces/predic_sentiment/ICategoria';
 import { DescargaPDFService } from '../../services/dataInfo/descarga-pdf.service';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-
 
 @Component({
   selector: 'app-general',
@@ -15,7 +13,6 @@ import html2canvas from 'html2canvas';
 })
 export class GeneralComponent implements OnInit {
   @ViewChild('content') content!: ElementRef;
-  userName=''
   infoCirculo : IClasStats = {
     net: 0,
     pos: 0,
@@ -28,11 +25,12 @@ export class GeneralComponent implements OnInit {
   
   tituloBarHorizontal = "Setimiento por Categoria";
   dataBarHorizontal: IBarInfo[] = [];
-
-  dataTreeMap: any = []
+  
+  dataTreeMapPos: any = []
+  dataTreeMapNeg: any = []
   dataWordCloud: any = []
 
-  constructor(private grafGeneralService:GrafGeneralService,
+  constructor(private grafGeneralService: GrafGeneralService,
     private descargaPDFService: DescargaPDFService) {
       this.descargaPDFService.downloadGeneralView$.subscribe(() => {
         this.downloadAsPDF();
@@ -73,16 +71,19 @@ export class GeneralComponent implements OnInit {
   }
   
 
-  ngOnInit() {
+  ngOnInit() {    
+
     this.grafGeneralService.infoCirculo$.subscribe((data: IClasStats) => {
       this.infoCirculo = data;
     });
-    this.grafGeneralService.dataMapTreeTop$.subscribe((data: any[] ) => {      
-      this.dataTreeMap = data;
+    this.grafGeneralService.dataMapTreeTopPos$.subscribe((data: any[] ) => {      
+      this.dataTreeMapPos = data;
+    });
+    this.grafGeneralService.dataMapTreeTopNeg$.subscribe((data: any[] ) => {      
+      this.dataTreeMapNeg = data;
     });
     this.grafGeneralService.dataBarHorizontal$.subscribe((data: any[] ) => {
-      this.dataBarHorizontal = procesarDataHorizontal(data);
-       
+      this.dataBarHorizontal = data;       
     });
     this.grafGeneralService.dataWordCloud$.subscribe((data: any[] ) => {
       this.dataWordCloud = data;
@@ -94,28 +95,5 @@ export class GeneralComponent implements OnInit {
   }
 
 }
-function procesarDataHorizontal(data: ICategoria[]): IBarInfo[] {
-  let resp: IBarInfo[] = [];
-  data.forEach((cat:any) => {
-    const item = {
-      "name": cat.nombre,
-      "series": [
-        {
-          "name": "Negativo",
-          "value": cat.stats.neg
-        },
-        {
-          "name": "Neutro",
-          "value": cat.stats.net
-        },
-        {
-          "name": "Positivo",
-          "value": cat.stats.pos
-        }
-      ]
-    }
-    resp.push(item)
-  });
-  return resp;
-}
+
 

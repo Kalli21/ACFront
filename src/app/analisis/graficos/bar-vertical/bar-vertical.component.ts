@@ -39,10 +39,7 @@ export class BarVerticalComponent implements OnChanges{
 
   }
 
-
   ngOnChanges(changes: SimpleChanges): void {
-    // this.multi = []
-    // this.iterateData();
     Object.assign(this, { multi: this.dataBarFecha });
   }
 
@@ -51,37 +48,27 @@ export class BarVerticalComponent implements OnChanges{
   }
 
   iterateData() {
-    for (let year in this.dataBarFecha) {
-      
-      let months = this.dataBarFecha[year];
-      
-      for (let month in months) {
-        
-        let categoriaCount = months[month][1][0][1];
-        ////
-        const item = {
-          "name": year +' - ' + month,
-          "series": [
-            {
-              "name": "Negativo",
-              "value": categoriaCount[0]
-            },
-            {
-              "name": "Neutro",
-              "value": categoriaCount[1]
-            },
-            {
-              "name": "Positivo",
-              "value": categoriaCount[2]
-            }
-          ]
-        }
-        this.multi.push(item)
-      
-      
-        Object.assign(this, { multi: [...this.multi] });
-        
+    
+    this.dataBarFecha.forEach((element: any) => {
+      const item = {
+        "name": element.nombre,
+        "series": [
+          {
+            "name": "Negativo",
+            "value": element.neg
+          },
+          {
+            "name": "Neutro",
+            "value": element.net
+          },
+          {
+            "name": "Positivo",
+            "value": element.pos
+          }
+        ]
       }
-    }
+      this.multi.push(item)
+    });
+    Object.assign(this, { multi: [...this.multi] });   
   }
 }

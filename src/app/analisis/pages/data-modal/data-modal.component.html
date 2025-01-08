@@ -1,10 +1,51 @@
 <div class="modalCargarData">
   <div class="container">
     <div class="row align-items-center">
-      <div class="col">
-        <h2 class="titulocolor">Contenido del archivo CSV</h2>
+      <h2 class="titulocolor">Contenido del archivo CSV</h2>
+      <div class="col-4">        
         <input type="file" (change)="leerArchivo($event)"> 
       </div>
+      <div class="col-2">
+        <section class="checkBox-section">
+          <mat-checkbox class="checkBox-margin" [(ngModel)]="clear_data">Nuevo Análisis</mat-checkbox>
+        </section>                
+      </div>      
+      <div class="col-3">
+        <mat-form-field class="example-form-field">
+          <mat-label>Separador</mat-label>
+          <input 
+            matInput 
+            type="text" 
+            [(ngModel)]="sep_val" 
+            (ngModelChange)="reProcesarArchivo()">
+          <button 
+            *ngIf="sep_val" 
+            matSuffix 
+            mat-icon-button 
+            aria-label="Separador" 
+            (click)="sep_val=''; reProcesarArchivo()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <div class="col-3">
+        <mat-form-field class="example-form-field">
+          <mat-label>Fin Línea</mat-label>
+          <input 
+            matInput 
+            type="text" 
+            [(ngModel)]="fin_linea" 
+            (ngModelChange)="reProcesarArchivo()">
+          <button 
+            *ngIf="fin_linea" 
+            matSuffix 
+            mat-icon-button 
+            aria-label="Fin Linea" 
+            (click)="fin_linea=''; reProcesarArchivo()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>          
     </div>
     <div class="row align-items-end" style="margin-top: 20px;">
       <div class="col-2">

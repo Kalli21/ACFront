@@ -40,6 +40,9 @@ export class ProductoComponent {
 
   dataWordCloud: any = [];
   dataComentarios: any = [];
+  filtro: any ={
+    totalItems: 0,
+  }
 
   constructor(private grafProductoService: GrafProductoService,
     private productoService: ProductoService,
@@ -94,13 +97,13 @@ export class ProductoComponent {
     });
 
     this.grafProductoService.dataWordCloud$.subscribe((data: any[] ) => {
-      this.dataWordCloud = data;
+      this.dataWordCloud = data; 
     });
 
-    this.grafProductoService.dataComentarios$.subscribe((data: any[] ) => {      
-      this.dataComentarios = data;
+    this.grafProductoService.dataComentarios$.subscribe((data: any ) => {      
+      this.dataComentarios = data.result;
+      this.filtro = data.filtroInfo;
     });
-
   }
 
   onInfoProducto(infoProducto: IProducto) {

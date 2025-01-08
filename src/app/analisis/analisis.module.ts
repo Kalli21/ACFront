@@ -39,6 +39,7 @@ import { FiltrosPaginaGeneralComponent } from './shared/filtros/filtros-pagina-g
 import {  MatProgressBarModule } from '@angular/material/progress-bar';
 import { TolTipsComponent } from './shared/tol-tips/tol-tips.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatAutocompleteModule,
     MatInputModule,
     MatProgressBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatCheckboxModule
   ],
 })
 export class AnalisisModule {}

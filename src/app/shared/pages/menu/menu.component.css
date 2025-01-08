@@ -81,3 +81,10 @@ mat-list-item:focus {
 .flex-container {
   margin-left: auto;
 }
+
+.toolbar-title {
+  flex-grow: 1; /* Ocupa el espacio restante */
+  text-align: center; /* Centra el texto */
+  font-size: 20px; /* Tamaño de fuente del título */
+  color: white; /* Color del título */
+}

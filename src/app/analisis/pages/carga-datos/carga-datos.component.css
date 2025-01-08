@@ -6,3 +6,27 @@
   border-radius: 5px;
   background-color: #141218;
 }
+
+/* tabla-comentarios.component.css */
+.no-rotate {
+  color: #52AC56;
+  /* Rotación de 90 grados */
+}
+
+.rotate-90 {
+  transform: rotate(90deg);
+  color: #E5DC27;
+  /* Rotación de 90 grados */
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+  color:#B3261E ;
+  /* Rotación de 180 grados */
+}
+
+.like-cell,
+.probabilidad-cell {
+  text-align: center;
+  /* Centrar horizontalmente el contenido de las celdas "like" y "probabilidad" */
+}

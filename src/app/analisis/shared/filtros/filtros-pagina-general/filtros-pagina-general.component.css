@@ -34,3 +34,11 @@
     height: 60px;
     background-color: #141218;
   }
+
+  .icon-center {
+    font-size: xx-large; /* Ajusta el tamaño del ícono */
+    height: fit-content;
+    width: fit-content;
+    margin: 0;
+  }
+  

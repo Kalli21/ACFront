@@ -14,6 +14,9 @@
     margin-top: 20px;
     border-radius: 20px;
 }
-.tablaModal{
-    
+.checkBox-margin{
+    margin: 0 12px;
 }
+.checkBox-section {
+    margin: 12px 0;
+  }

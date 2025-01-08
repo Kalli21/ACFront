@@ -10,6 +10,7 @@ import { GrafProductoService } from '../../../services/dataInfo/graf-producto.se
 import { IComentariosFiltros } from '../../../interfaces/predic_sentiment/Request/IComentariosFiltros';
 import { TopicModelingService } from '../../../services/topicModel/topic-modeling.service';
 import { DescargaPDFService } from 'src/app/analisis/services/dataInfo/descarga-pdf.service';
+import { IInfoFiltro } from 'src/app/analisis/interfaces/webApi/Request/IInfoFiltro';
 
 @Component({
   selector: 'app-filtros-pagina-productos',
@@ -29,6 +30,7 @@ export class FiltrosPaginaProductosComponent {
       start: new FormControl(null),
       end: new FormControl(null),
     });
+
     fechaIniSelect?: string;
     fechaFinSelect?: string;
     //Selecte Sentimiento
@@ -82,6 +84,9 @@ export class FiltrosPaginaProductosComponent {
         this.selecCategoria = filters.categoria;
         this.selecTema = filters.tema;
         
+        this.fechaIniSelect = filters.startDate;
+        this.fechaFinSelect = filters.endDate;  
+
         //Emeiter Producto Info
         this.infoProducto.emit(this.selectedProduct);  
   
@@ -98,9 +103,13 @@ export class FiltrosPaginaProductosComponent {
         }
     }
     
-   
-    
     obtenerTemas(){
+      this.userName = localStorage.getItem('userName') || '';
+      this.userObj = localStorage.getItem('userInfo');
+      if (this.userObj) {
+        const storedObj = JSON.parse(this.userObj);
+        this.id_user = storedObj.id;
+      }
       if (this.id_user!==-1) {
         this.topicModelingService.getTemas(this.userName, 4).subscribe( (resp:any) => {
           Object.keys(resp).forEach((clave) => {
@@ -118,6 +127,12 @@ export class FiltrosPaginaProductosComponent {
     }
   
     buscadorProducto() {
+      this.userName = localStorage.getItem('userName') || '';
+      this.userObj = localStorage.getItem('userInfo');
+      if (this.userObj) {
+        const storedObj = JSON.parse(this.userObj);
+        this.id_user = storedObj.id;
+      }
       if (this.id_user!==-1) {
         this.filteredOptions = this.myControl.valueChanges.pipe(
           mergeMap(value => {
@@ -148,16 +163,9 @@ export class FiltrosPaginaProductosComponent {
   
       }
     } 
-  
-  
+    
     buscarData(){
        
-      let filtrosComentariosFecha: IComentariosFiltros = {
-        idProducto : this.selectedProduct?.id,
-        fechaIni : this.fechaIniSelect,
-        fechaFin : this.fechaFinSelect
-      }
-  
       let filtroSentimiento: number[] = [];
       
       let filtroTemas: number[] = [];
@@ -180,9 +188,32 @@ export class FiltrosPaginaProductosComponent {
       if (this.selecSentimiento === 'Negativo'){
         filtroSentimiento = [0];
       }
-  
-      this.grafProductoService.obtenerData(filtrosComentariosFecha,filtroTemas,filtroSentimiento);
-    
+      
+      if (this.selectedProduct?.id) {
+
+        let filtroInfo: IInfoFiltro = {
+          CT_filtro_com : {
+            fechaIni : this.fechaIniSelect,
+            fechaFin : this.fechaFinSelect,
+            categoriasId : filtroSentimiento,
+          },      
+          PS_filtros_com : {
+            fechaIni : this.fechaIniSelect,
+            fechaFin : this.fechaFinSelect,
+            idProducto : this.selectedProduct.id.toString(),
+            userName : this.userName,
+          },
+          DT_filtros_com : {
+            fechaIni : this.fechaIniSelect,
+            fechaFin : this.fechaFinSelect,
+            temasId : filtroTemas,
+          },
+          cant_ranking : 10,
+          get_comentarios: true
+        }
+        this.grafProductoService.ObtenerData(filtroInfo);
+      }
+
     }
   
     displayOption(option: IProducto): string {
@@ -191,26 +222,26 @@ export class FiltrosPaginaProductosComponent {
   
     onSelectTema(selectedOption: string): void {
       this.guardarValoresLocalStorage();
-      this.buscarData();
+      
     }
     
     onSelectSentimiento(selectedOption: string): void {
       this.guardarValoresLocalStorage();
-      this.buscarData();
+      
     }
   
     onProductSelected(event: MatAutocompleteSelectedEvent) {
       this.selectedProduct = event.option.value;
       this.guardarValoresLocalStorage();
       this.infoProducto.emit(this.selectedProduct);    
-      this.buscarData();  
+       
     }
   
     onDateSelect(){         
       this.fechaIniSelect = this.campaignOne.value.start ? this.campaignOne.value.start.toISOString() : null;
       this.fechaFinSelect = this.campaignOne.value.end ? this.campaignOne.value.end.toISOString() : null;
       this.guardarValoresLocalStorage();
-      this.buscarData();    
+         
     }
     clearDates(): void {
       this.campaignOne.setValue({
@@ -220,7 +251,7 @@ export class FiltrosPaginaProductosComponent {
       this.fechaIniSelect = undefined;
       this.fechaFinSelect = undefined; 
       this.guardarValoresLocalStorage();
-      this.buscarData();      
+       
     }
   
     //Variables locales
@@ -236,6 +267,6 @@ export class FiltrosPaginaProductosComponent {
       localStorage.setItem('filtrosProducto', JSON.stringify(filtrosProducto));
     
       // Otros valores a guardar...
-    }
-  
+    }  
+
 }

@@ -8,7 +8,8 @@ import { ScaleType } from '@swimlane/ngx-charts';
 })
 export class MapTreeComponent implements OnChanges {
 
-  @Input() dataTreeMap:any = [];
+  @Input() dataTreeMapPos:any = [];
+  @Input() dataTreeMapNeg:any = [];
 
   single:any = [];
   view: [number, number] = [300, 400];
@@ -34,7 +35,7 @@ export class MapTreeComponent implements OnChanges {
   constructor() {
   }
   ngOnChanges(changes: SimpleChanges): void {
-    this.rankPos();
+    this.rankData(this.dataTreeMapPos);
   }
   onSelect(event: any) {
   }
@@ -48,46 +49,26 @@ export class MapTreeComponent implements OnChanges {
     if (event.value === 'positivo') {
       this.colorScheme = { ...this.colorScheme, domain: this.colorSchemePositivo };
       this.botonSeleccionado = 'positivo';
-      this.rankPos();
+      this.rankData(this.dataTreeMapPos);
     } else if (event.value === 'negativo') {
       this.colorScheme = { ...this.colorScheme, domain: this.colorSchemeNegativo };
       this.botonSeleccionado = 'negativo';
-      this.rankNeg();
+      this.rankData(this.dataTreeMapNeg);
     }
   }
 
-  rankPos() {
-    if (this.dataTreeMap) {
+  rankData(data_rank: any) {
+    if (data_rank && data_rank.length > 0) {
       this.single = []
-      for (let i = 0; i < 5; i++) {
-        const prod = this.dataTreeMap[i];
+      data_rank.forEach((element: any) => {
+        const prod = element;
         const item = {
           "name": prod.nombre,
-          "value": prod.stats.pos
+          "value": prod.correlativo
         }
         this.single.push(item)
-      }
+      });
       Object.assign(this, { single: [...this.single] });
-    }
-    
+    }    
   }
-
-  rankNeg() {
-    if (this.dataTreeMap) {
-      this.single = []
-      for (let i = this.dataTreeMap.length - 1; i >= this.dataTreeMap.length - 5; i--) {
-        const prod = this.dataTreeMap[i];
-  
-        const item = {
-          "name": prod.nombre,
-          "value": prod.stats.pos
-        }
-        this.single.push(item)
-      }
-      Object.assign(this, { single: [...this.single] });
-    }
-    
-  }
-
-
 }

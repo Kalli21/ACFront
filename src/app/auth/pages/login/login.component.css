@@ -1,13 +1,13 @@
-    .titulocolor{
-        color: #D0BCFF;
-        text-align: center;
-    }
+.titulocolor{
+    color: #D0BCFF;
+    text-align: center;
+}
 
-    .parrafocolor{
-        color: white;
-        text-align: center;
-    }
+.parrafocolor{
+    color: white;
+    text-align: center;
+}
 
-    .hijo {
-        position: absolute;/* aplicar a top y al margen izquierdo un valor negativo para completar el centrado del elemento hijo */
-    }
+.hijo {
+    position: absolute;/* aplicar a top y al margen izquierdo un valor negativo para completar el centrado del elemento hijo */
+}

@@ -3,13 +3,14 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  // apiBackUrl: 'https://localhost:7015',
-  apiBackUrl: 'http://54.83.42.195:8080',
+  apiBackUrl: 'https://localhost:7015',
+  // apiBackUrl: 'http://54.83.42.195:8080',
   // apiBackUrl: 'http://54.157.164.255/PrediccionSentiminetoBack',
-  // apiClasModelUrl:'http://127.0.0.1:8000',
-  apiClasModelUrl:'http://34.193.174.188',
-  // apiTopicModelUrl:'http://127.0.0.1:8000',
-  apiTopicModelUrl:'http://54.87.222.35',
+  apiClasModelUrl:'http://127.0.0.1:8003',
+  // apiClasModelUrl:'http://34.193.174.188',
+  apiTopicModelUrl:'http://127.0.0.1:8004',
+  // apiTopicModelUrl:'http://54.87.222.35',
+  webApiUrl:'http://127.0.0.1:8005',
   production: false
 };
 

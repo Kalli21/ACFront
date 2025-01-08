@@ -1,11 +1,11 @@
 import { Component, } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { GrafGeneralService } from '../../../services/dataInfo/graf-general.service';
-import { ICategoriasFiltros } from 'src/app/analisis/interfaces/predic_sentiment/Request/ICategoriasFiltros';
 import { CategoriaService } from '../../../services/predict_sentiment/categoria.service';
 import { ICategoria } from '../../../interfaces/predic_sentiment/ICategoria';
-import { tap } from 'rxjs';
+
 import { DescargaPDFService } from '../../../services/dataInfo/descarga-pdf.service';
+import { IInfoFiltro } from 'src/app/analisis/interfaces/webApi/Request/IInfoFiltro';
 
 @Component({
   selector: 'app-filtros-pagina-general',
@@ -17,8 +17,9 @@ export class FiltrosPaginaGeneralComponent {
   userObj = localStorage.getItem('userInfo');
   id_user = -1;
   userName = localStorage.getItem('userName') || '';
-
   
+  primerInicio = localStorage.getItem('primerInicio') || '';
+
   listCategorias: ICategoria[] = [];
   
   //DatePiker
@@ -34,7 +35,8 @@ export class FiltrosPaginaGeneralComponent {
   //Selecte Categoria
   selecCategoria?: ICategoria;
 
-  constructor(public grafGeneralService: GrafGeneralService,
+  constructor(
+    public grafGeneralService: GrafGeneralService,
     private categoriaService: CategoriaService,
     private descargaPDFService: DescargaPDFService) {}
   
@@ -42,7 +44,7 @@ export class FiltrosPaginaGeneralComponent {
     this.descargaPDFService.requestDownloadGeneral();
   }
 
-  ngOnInit() {
+  ngOnInit() { 
     // Restaurar valores guardados en localStorage
     const filtrosGeneral = localStorage.getItem('filtrosGeneral');
     if (filtrosGeneral) {
@@ -52,8 +54,15 @@ export class FiltrosPaginaGeneralComponent {
       this.campaignOne.get('end')!.setValue(filters.endDate);
       this.selecSentimiento = filters.sentimiento;
       this.selecCategoria = filters.categoria;
-    }else{
-      this.buscarData();
+
+      this.fechaIniSelect = filters.startDate;
+      this.fechaFinSelect = filters.endDate;
+
+    }
+    
+    if (this.primerInicio === 'true') {
+      localStorage.setItem('primerInicio','false');
+      this.buscarData();      
     }
      
     if (this.userObj) {
@@ -63,12 +72,13 @@ export class FiltrosPaginaGeneralComponent {
         if (this.selecCategoria && this.listCategorias.length > 0) {
           const matchingCategoria = this.listCategorias.find(cat => cat.id === this.selecCategoria?.id);
           this.selecCategoria = matchingCategoria;
-        }
-        
+        }        
       });
     }
   }
+  
   obtenerCategorias(callback: () => void) {
+    this.userName = localStorage.getItem('userName') || '';
     this.categoriaService.getCategorias(this.userName).subscribe((d: any) => {
       this.listCategorias = d.result;
       callback();
@@ -80,12 +90,6 @@ export class FiltrosPaginaGeneralComponent {
     if(this.selecCategoria){
       lisCatIds.push(this.selecCategoria.id);
     }    
-
-    let filtrosComentariosFecha: ICategoriasFiltros = {
-      categoriasId : lisCatIds,
-      fechaIni: this.fechaIniSelect,
-      fechaFin: this.fechaFinSelect,
-    }   
 
     let filtroSentimiento: number[] = [];
 
@@ -101,20 +105,35 @@ export class FiltrosPaginaGeneralComponent {
     if (this.selecSentimiento === 'Negativo') {
       filtroSentimiento = [0];
     }
-
-    this.grafGeneralService.ObtenerData(
-      filtrosComentariosFecha,
-      filtroSentimiento
-    );
+    
+    let filtroInfo: IInfoFiltro = {
+      CT_filtro_com : {
+        fechaIni : this.fechaIniSelect,
+        fechaFin : this.fechaFinSelect,
+        categoriasId : filtroSentimiento,
+      },      
+      PS_filtros_com : {
+        fechaIni : this.fechaIniSelect,
+        fechaFin : this.fechaFinSelect,
+        categoriasId : lisCatIds.length > 0 ? lisCatIds : undefined,
+        userName : this.userName,
+      },
+      DT_filtros_com : {
+        fechaIni : this.fechaIniSelect,
+        fechaFin : this.fechaFinSelect,
+      },
+      cant_ranking : 10,
+    }
+    
+    this.grafGeneralService.ObtenerData(filtroInfo);
   }
   
   onSelectCategoria(){
     this.guardarValoresLocalStorage();
-    this.buscarData();
   }
+
   onSelectSentimiento(selectedOption: string): void {
     this.guardarValoresLocalStorage();
-    this.buscarData();
   }
 
   onDateSelect() {
@@ -125,8 +144,8 @@ export class FiltrosPaginaGeneralComponent {
       ? this.campaignOne.value.end.toISOString()
       : null;
     this.guardarValoresLocalStorage();
-    this.buscarData();
   }
+
   clearDates(): void {
     this.campaignOne.setValue({
       start: null,
@@ -135,7 +154,6 @@ export class FiltrosPaginaGeneralComponent {
     this.fechaIniSelect = undefined;
     this.fechaFinSelect = undefined;    
     this.guardarValoresLocalStorage();
-    this.buscarData();
   }
 
   //Variables locales
