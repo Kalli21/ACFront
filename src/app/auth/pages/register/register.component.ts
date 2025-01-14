@@ -17,7 +17,7 @@ export class RegisterComponent {
     private router: Router, private snackBar: MatSnackBar) {
     this.registerForm = this.fb.group({
       userName: ['', Validators.required],
-      nombre: ['', Validators.required],
+      nombres: ['', Validators.required],
       correo: ['', Validators.compose([
         Validators.required,
         Validators.email

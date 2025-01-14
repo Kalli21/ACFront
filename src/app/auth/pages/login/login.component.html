@@ -35,13 +35,16 @@
             </div> -->
             <!-- Botón de inicio de sesión -->
             <div class="form-group mb-3">
-              <button mat-raised-button color="primary" type="submit" class="w-100" >Iniciar sesión</button>
-            </div>
+              <button mat-raised-button color="primary" type="submit" class="w-100" >Iniciar Sesión</button>
+            </div>           
+          </form>
+           <section class="checkBox-section">
+              <mat-checkbox class="checkBox-margin" [(ngModel)]="recordarme">Recordar Sesión</mat-checkbox>
+            </section> 
             <!-- Texto de crear cuenta -->
             <div class="form-group parrafocolor">
               <p>¿No tienes una cuenta? <a routerLink="/auth/register">Crea aquí</a>.</p>
             </div>
-          </form>
         </div>
       </div>
     </div>

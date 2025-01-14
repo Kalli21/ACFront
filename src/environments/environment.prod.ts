@@ -1,7 +1,5 @@
 export const environment = {
-  // apiBackUrl: 'https://54.83.42.195:7015',
-  apiBackUrl: 'http://54.83.42.195:8080',
-  apiClasModelUrl:'http://54.159.145.93',
-  apiTopicModelUrl:'http://54.209.70.76',
+  webApiUrl:'http://127.0.0.1:8005',
+  // webApiUrl:'https://539r153q-8005.brs.devtunnels.ms',
   production: true
 };

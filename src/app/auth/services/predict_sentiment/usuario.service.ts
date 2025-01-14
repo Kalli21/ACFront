@@ -15,7 +15,7 @@ import { WebapiService } from 'src/app/analisis/services/webapi/webapi.service';
 export class UsuarioService {
   private isLoggedIn = false;
 
-  baserUrl: string = environment.apiBackUrl + '/api/Usuario/';
+  baserUrl: string = environment.webApiUrl + '/Usuario/';
   private msgEstadoSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   msgEstado$ = this.msgEstadoSubject.asObservable();
 
@@ -44,18 +44,24 @@ export class UsuarioService {
   }
 
   logout() {
+    this.limpiarData();
+    this.isLoggedIn = false;
+    this.router.navigate(['/auth']);
+    // window.location.reload();
+       
+  }
+  
+  limpiarData(){
     localStorage.removeItem('userName');
     localStorage.removeItem('token_value');
     localStorage.removeItem('userInfo');
     localStorage.removeItem('filtrosGeneral');
     localStorage.removeItem('filtrosProducto');
     localStorage.removeItem('isCollapsed');
+    localStorage.removeItem('recordarme');
+    localStorage.removeItem('primerInicio');
     this.grafGeneralService.limpiarData();
     this.grafProductoService.limpiarData();
-    this.router.navigate(['/analisis']);
-    window.location.reload();
-    this.isLoggedIn = false;
-    
   }
 
   get getUsername() {
@@ -66,23 +72,11 @@ export class UsuarioService {
     return !!localStorage.getItem('token_value');
   }
 
-  getUsuarios() {
-    return this.http.get(this.baserUrl);
-  }
-
-  getUsuario(id: number) {
-    return this.http.get(this.baserUrl + id);
-  }
-
-  actualizarUsuario(id: number, usuario: IUsuario) {
-    return this.http.put(this.baserUrl + id, usuario);
-  }
-
-  deleteUsuario(id: number) {
-    return this.http.delete(this.baserUrl + id);
-  }
-
   isAuthenticated(): boolean {
+    let local_recordar = localStorage.getItem('recordarme') === 'true';
+    if (local_recordar) { 
+      this.isLoggedIn = true;
+    }
     return this.isLoggedIn;
   }  
 
@@ -115,6 +109,10 @@ export class UsuarioService {
       msg = "Obteniendo Información";
     }
     this.msgEstadoSubject.next(msg);
+  }
+
+  isAuthorized() {
+    return this.http.get(this.baserUrl + 'Autorizacion');
   }
   
 }

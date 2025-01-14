@@ -11,6 +11,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { GrafProductoService } from '../analisis/services/dataInfo/graf-producto.service';
 import { GrafGeneralService } from '../analisis/services/dataInfo/graf-general.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UsuarioService } from '../auth/services/predict_sentiment/usuario.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +20,7 @@ export class InterceptorService implements HttpInterceptor {
   constructor(
     private grafProductoService: GrafProductoService,
     private grafGeneralService: GrafGeneralService,
+    private usuarioService: UsuarioService,
     private snackBar: MatSnackBar
   ) {}
 
@@ -42,20 +44,31 @@ export class InterceptorService implements HttpInterceptor {
     return next.handle(reqClone).pipe(catchError(this.manejarError));
   }
 
-  manejarError = (error: HttpErrorResponse) => {    
-    this.showMessage('Sucedio un error.');
+  manejarError = (error: HttpErrorResponse) => { 
+    
+    if (error.status === 401) {
+      this.usuarioService.logout();
+    }
+    
     if (this.grafGeneralService && this.grafGeneralService.cargando) {
       this.grafGeneralService.cargando = false;
     }
     if (this.grafProductoService && this.grafProductoService.cargando) {
       this.grafProductoService.cargando = false;
-    }
-  
+    }  
     console.log('sucedio un error');
     console.log(error);
-    if (error.error && error.error.displayMessage === 'Usuario no existe') {
-      // Mostrar alerta en pantalla con el mensaje de error
-      this.showMessage(error.error.displayMessage);
+    if (error.error && error.error.detail ) {
+      if(error.error.detail.includes("Unauthorized")){
+        this.usuarioService.logout();
+      }
+      if (error.error.detail.displayMessage && error.error.detail.displayMessage !== '') {
+        // Mostrar alerta en pantalla con el mensaje de error
+        this.showMessage(error.error.detail.displayMessage);
+      }
+      
+    }else{
+      this.showMessage('Sucedio un error.');
     }
     return throwError(() => new Error('Error personalizado'));
   };
