@@ -46,6 +46,7 @@ export class LoginComponent implements OnInit  {
         localStorage.setItem('recordarme', String(this.recordarme));
         const objStr = JSON.stringify(data.result);
         localStorage.setItem('userInfo', objStr);
+        this.service.setisLoggedIn();
         this.showMessage("Sesión Exitosa")
         this.router.navigate(['/analisis'])
         this.service.getEstado();

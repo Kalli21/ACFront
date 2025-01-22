@@ -51,39 +51,57 @@ export class ProductoComponent {
         this.downloadAsPDF();
       });
   }
-  
+
   downloadAsPDF() {
-    const doc = new jsPDF();
     const content = this.content.nativeElement;
-  
-    // Aplicar estilo CSS para establecer el fondo negro
-    content.style.background = '#303030';
-  
+    
     const options = {
-      scale: 2, // Ajustar la escala de la captura (2 significa 2 veces más grande)
-      useCORS: true, // Permitir el uso de recursos de origen cruzado (Cross-Origin)
-      logging: true, // Habilitar el registro de eventos en la consola
-      windowWidth: document.documentElement.clientWidth, // Ancho de la ventana actual
-      windowHeight: document.documentElement.clientHeight // Alto de la ventana actual
+      scale: 3, // Aumentar la escala para mayor resolución
+      useCORS: true,
+      logging: true,
+      windowWidth: document.documentElement.clientWidth,
+      windowHeight: document.documentElement.clientHeight,
+      useWebGL: true // Usar WebGL para renderizado
     };
   
+    function applyCaptureStyles(element: HTMLElement) {
+      element.style.background = '#303030';
+      element.style.color = 'white';
+    }
+  
+    function resetCaptureStyles(element: HTMLElement) {
+      element.style.background = '';
+      element.style.color = '';
+    }
+  
+    applyCaptureStyles(content);
     html2canvas(content, options).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const imgProps = doc.getImageProperties(imgData);
-      const pdfWidth = doc.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      const imgData = canvas.toDataURL('image/png', 1.0);
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210;
+      const pageHeight = 297;
+      let imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
   
-      // Dibujar un rectángulo blanco en el fondo de la página
-      doc.rect(0, 0, pdfWidth, pdfHeight, 'F');
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
   
-      // Agregar la imagen capturada del contenido
-      doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      doc.save('Reporte.pdf');
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
   
-      // Restaurar el estilo CSS original
-      content.style.background = 'none';
+      pdf.save('Reporte.pdf');
+      resetCaptureStyles(content);
+    }).catch((error) => {
+      console.error('Error al generar el PDF:', error);
     });
   }
+  
+  
   
 
   ngOnInit() {
@@ -107,7 +125,9 @@ export class ProductoComponent {
   }
 
   onInfoProducto(infoProducto: IProducto) {
-    this.productoService.getProducto(infoProducto.id).subscribe( (d:any) => this.infoProducto = d.result );    
+    this.productoService.getProducto(infoProducto.id).subscribe( (d:any) => {
+      this.infoProducto = d.result 
+    });    
   }
 
 }

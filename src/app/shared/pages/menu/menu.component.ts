@@ -22,6 +22,12 @@ export class MenuComponent{
         this.isLoading = false;
       }
     });
+
+    this.usuarioService.isLoggedIn$.subscribe((isLoggedIn: boolean) => {
+      this.isMenuFixed = isLoggedIn;
+      this.shouldShowMenu()
+    });
+
     this.userName = localStorage.getItem('userName') || '';
     this.usuarioService.msgEstado$.subscribe((data: any) => {
       this.msgEstado = data;
@@ -30,7 +36,7 @@ export class MenuComponent{
 
 
   shouldShowMenu(): boolean {
-    return !this.router.url.startsWith('/auth');
+    return this.usuarioService.isLoggedIn$  && !this.router.url.startsWith('/auth');
   }
   toggleMenu() {
     this.isMenuFixed = !this.isMenuFixed;

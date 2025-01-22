@@ -18,6 +18,9 @@ export class UsuarioService {
   baserUrl: string = environment.webApiUrl + '/Usuario/';
   private msgEstadoSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   msgEstado$ = this.msgEstadoSubject.asObservable();
+  
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router, 
     private grafGeneralService: GrafGeneralService,
@@ -37,15 +40,20 @@ export class UsuarioService {
     this.isLoggedIn = true;
     return this.http.post(this.baserUrl + 'Register', user);
   }
+  
+  setisLoggedIn(){
+    this.isLoggedInSubject.next(true);
+  }
 
   login(user: IUsuario) {
-    this.isLoggedIn = true;
+    this.isLoggedIn = true;    
     return this.http.post(this.baserUrl + 'Login', user);
   }
 
   logout() {
     this.limpiarData();
     this.isLoggedIn = false;
+    this.isLoggedInSubject.next(false);
     this.router.navigate(['/auth']);
     // window.location.reload();
        
