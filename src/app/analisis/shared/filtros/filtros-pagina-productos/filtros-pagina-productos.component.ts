@@ -104,6 +104,7 @@ export class FiltrosPaginaProductosComponent {
     }
     
     obtenerTemas(){
+      let cantWord = 10;
       this.userName = localStorage.getItem('userName') || '';
       this.userObj = localStorage.getItem('userInfo');
       if (this.userObj) {
@@ -111,14 +112,17 @@ export class FiltrosPaginaProductosComponent {
         this.id_user = storedObj.id;
       }
       if (this.id_user!==-1) {
-        this.topicModelingService.getTemas(this.userName, 4).subscribe( (resp:any) => {
+        this.topicModelingService.getTemas(this.userName, cantWord).subscribe( (resp:any) => {
           Object.keys(resp).forEach((clave) => {
             const dic2 = resp[clave];
             const clavesDic2 = Object.keys(dic2);
             const numerosClaves = clavesDic2.map((clave) => parseFloat(clave));
             const mayorKey = Math.max(...numerosClaves);
             const valor = dic2[mayorKey.toString()];
-            this.listaTemas.push(valor);
+            if (valor && valor !== "") {
+              this.listaTemas.push(valor);
+            }
+            
           });
           
         });

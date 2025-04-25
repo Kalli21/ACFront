@@ -59,8 +59,12 @@ export class InterceptorService implements HttpInterceptor {
     console.log('sucedio un error');
     console.log(error);
     if (error.error && error.error.detail ) {
-      if(error.error.detail.includes("Unauthorized")){
+      const detalle = error.error.detail;
+      if (typeof detalle === 'string' && detalle.includes("Unauthorized")) {
         this.usuarioService.logout();
+      }
+      if (typeof detalle === 'object' && detalle.displayMessage && detalle.displayMessage !== '') {
+        this.showMessage(detalle.displayMessage);
       }
       if (error.error.detail.displayMessage && error.error.detail.displayMessage !== '') {
         // Mostrar alerta en pantalla con el mensaje de error

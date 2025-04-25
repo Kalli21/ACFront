@@ -31,14 +31,23 @@ export class WordCloudComponent implements OnChanges {
   }
 
   private mapDataToCloudData(data: any[]): CloudData[] {
-    return data.map((item) => {
-      const valueKey = Object.keys(item)[0];
-      const value = item[valueKey];
-
-      return {
-        text: value,
-        weight: parseFloat(valueKey),
-      };
-    });
+    const seenWords = new Set<string>();
+    const result: CloudData[] = [];
+  
+    for (const item of data) {
+      for (const key of Object.keys(item)) {
+        const text = item[key];
+  
+        if (!seenWords.has(text)) {
+          seenWords.add(text);
+          result.push({
+            text: text,
+            weight: parseFloat(key) * 200,
+          });
+        }
+      }
+    }  
+    return result;
   }
+  
 }
